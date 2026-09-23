@@ -3,7 +3,10 @@
 #
 # The one line a customer pastes (fetches the kit itself, nothing to download first):
 #
-#   curl -fsSL https://raw.githubusercontent.com/BigWork-AI/aios-starter/main/install.sh | sh -s -- "Acme Roofing" acme-roofing
+#   curl -fsSL https://raw.githubusercontent.com/BigWork-AI/aios-starter/main/install.sh | sh
+#
+# It asks for the business name and makes the short name from it. Both can be given up front
+# instead: ... | sh -s -- "Acme Roofing" acme-roofing
 #
 # Or, with a local copy of the kit (friends-week, USB stick):
 #
@@ -21,9 +24,20 @@ set -eu
 
 COMPANY="${1:-}"
 SLUG="${2:-}"
+# Piped into sh, the script itself is on standard input, so the question is asked on the terminal.
+TTY="${AIOS_TTY:-/dev/tty}"
+if [ -z "$COMPANY" ] && (: < "$TTY") 2>/dev/null; then
+  printf 'What is your business called? ' >&2
+  IFS= read -r COMPANY < "$TTY" || COMPANY=""
+fi
+if [ -z "$SLUG" ]; then
+  SLUG=$(printf '%s' "$COMPANY" | tr '[:upper:]' '[:lower:]' | sed 's/&/and/g; s/[^a-z0-9][^a-z0-9]*/-/g; s/^-//; s/-$//')
+fi
 if [ -z "$COMPANY" ] || [ -z "$SLUG" ]; then
   echo "usage: curl -fsSL https://raw.githubusercontent.com/BigWork-AI/aios-starter/main/install.sh | sh -s -- \"Company Name\" company-slug"; exit 2
 fi
+# The name goes into files through sed, where & and | have special meanings.
+COMPANY_SED=$(printf '%s' "$COMPANY" | sed 's/[&|\\]/\\&/g')
 DEST="${AIOS_DEST:-$HOME/$SLUG-brain}"
 PRIVATE="${AIOS_PRIVATE:-$HOME/$SLUG-private}"
 TODAY=$(date +%Y-%m-%d)
@@ -58,16 +72,22 @@ if [ -n "$missing" ]; then
   exit 1
 fi
 # Claude Code: install it if we can, otherwise say exactly where to get it.
-if ! need claude; then
+# AIOS_INSTALL_CLAUDE=0 skips this (the kit's tests use it so they never download anything).
+if ! need claude && [ "${AIOS_INSTALL_CLAUDE:-1}" = 1 ]; then
   if need npm; then
     echo "Installing Claude Code (one minute)."
     npm install -g @anthropic-ai/claude-code >/dev/null 2>&1 && echo "Claude Code installed." || echo "Could not install Claude Code automatically. Get it at https://claude.ai/code and paste the same line again when it is in."
   elif [ "$OS" = Darwin ] && need brew; then
     echo "Installing Claude Code (one minute)."
     brew install --quiet node >/dev/null 2>&1 && npm install -g @anthropic-ai/claude-code >/dev/null 2>&1 && echo "Claude Code installed." || echo "Could not install Claude Code automatically. Get it at https://claude.ai/code and paste the same line again when it is in."
+  elif need curl; then
+    echo "Installing Claude Code with Anthropic's installer (one minute)."
+    curl -fsSL https://claude.ai/install.sh | bash >/dev/null 2>&1 && echo "Claude Code installed." || echo "Could not install Claude Code automatically. Get it at https://claude.ai/code and paste the same line again when it is in."
   else
     echo "Claude Code is not installed yet. The brain will still be built. Get Claude Code at https://claude.ai/code, then open the brain folder and type /start."
   fi
+  # Anthropic's installer puts it in ~/.local/bin, which this shell may not search yet.
+  need claude || PATH="$HOME/.local/bin:$PATH"
 fi
 # GitHub is optional at install: it is the online backup and the phone link, connected during the session.
 need gh && GH=1 || GH=0
@@ -110,7 +130,7 @@ cd "$DEST"
 say "Naming it"
 ENGINE=$(cat .aios/VERSION)
 for f in AGENTS.md README.md CLAUDE.md company/identity.md company/access.md guide.md .aios/interview.json; do
-  [ -f "$f" ] && sed -i.bak "s|%%COMPANY%%|$COMPANY|g; s|%%ENGINE_VERSION%%|$ENGINE|g; s|%%PRIVATE%%|$PRIVATE|g" "$f" && rm -f "$f.bak"
+  [ -f "$f" ] && sed -i.bak "s|%%COMPANY%%|$COMPANY_SED|g; s|%%ENGINE_VERSION%%|$ENGINE|g; s|%%PRIVATE%%|$PRIVATE|g" "$f" && rm -f "$f.bak"
 done
 if grep -q '%%COMPANY%%' aios.yml 2>/dev/null || [ ! -f aios.yml ]; then
   cat > aios.yml <<EOF
