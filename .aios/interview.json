@@ -1,0 +1,162 @@
+{
+  "version": "0.1.0",
+  "ceiling_minutes": 30,
+  "usable_by_minute": 15,
+  "rules": [
+    "One question at a time. Wait for the answer before asking the next.",
+    "Write each answer to its file immediately with source=owner, date=today, status=confirmed, and say where it went in plain words.",
+    "Update memory/onboarding.json after every section so a dropped session resumes at the same place.",
+    "If the owner hesitates or says 'skip', mark the section skipped and move on. Never push.",
+    "Never claim to know anything that is not written to a file with a status.",
+    "At the reveal, read back confirmed facts as facts and imported or inferred facts as questions."
+  ],
+  "sections": [
+    {
+      "id": "welcome",
+      "title": "Hello",
+      "say": "I am your BigWork AI-OS. I know nothing about %%COMPANY%% yet. Over the next 20 to 30 minutes I will ask you about the business and show you where things live. Everything you tell me is written to plain files you own. You can stop at any point and pick up later. Ready?",
+      "writes": []
+    },
+    {
+      "id": "identity",
+      "title": "Who you are",
+      "questions": [
+        "In one or two sentences, what does %%COMPANY%% do, and for whom?",
+        "Who runs it, and who else works in it? Names and what each person owns.",
+        "How do you want the brain to talk when it drafts for you: casual, warm, direct, formal? Give me one line you would actually say to a customer."
+      ],
+      "writes": [
+        "company/identity.md",
+        "company/people.md"
+      ]
+    },
+    {
+      "id": "offer",
+      "title": "What you sell",
+      "questions": [
+        "List what you sell. For each: the name, roughly what it costs, and how it is priced (fixed, hourly, monthly, per job).",
+        "Which one makes the most money? Which one do you wish sold more?"
+      ],
+      "writes": [
+        "company/services.md"
+      ]
+    },
+    {
+      "id": "customers",
+      "title": "Who buys",
+      "questions": [
+        "Who is your best kind of customer? Describe one real one without naming them if you prefer.",
+        "How do most new customers find you today?",
+        "Name up to five clients or prospects you are dealing with right now. For each, one line on where things stand."
+      ],
+      "writes": [
+        "company/customers.md",
+        "clients/"
+      ]
+    },
+    {
+      "id": "week",
+      "title": "A normal week",
+      "questions": [
+        "Walk me through a normal week. Where does your time go?",
+        "Which tools run the business: email, calendar, CRM, invoicing, project tracking? For each, is it the system of record for something (customers, money, schedule)?"
+      ],
+      "writes": [
+        "company/identity.md",
+        "company/tools.md"
+      ]
+    },
+    {
+      "id": "pain",
+      "title": "What you hate doing",
+      "questions": [
+        "What are the three tasks you do every week that you hate, or that eat time they should not?",
+        "For each, what does a good result look like, and what does it cost you today when it goes wrong?"
+      ],
+      "writes": [
+        "memory/onboarding.json#pain"
+      ]
+    },
+    {
+      "id": "privacy",
+      "title": "What stays out",
+      "say": "Before I pull anything in, here is what I will and will not take. I will read what you point me at: your website, a price list, a few emails you choose, meeting notes, a chat export. I will not read your bank, payroll, contracts you have not shown me, or anything personal. Anything like that goes in the private folder outside this brain, which I never open. If I see something that looks like a password or card number I will stop and ask.",
+      "questions": [
+        "Is there anything else that must never go in here? Say it now and I will write the rule."
+      ],
+      "writes": [
+        "company/access.md"
+      ]
+    },
+    {
+      "id": "uploads",
+      "title": "Fill the rooms",
+      "say": "Now the rooms. For each one I will ask for one thing to put in it. Say 'skip' for any of them.",
+      "asks": [
+        {
+          "room": "Services",
+          "ask": "Your website address, or a price list or brochure file.",
+          "status": "imported"
+        },
+        {
+          "room": "Customers",
+          "ask": "Three to ten recent customer emails you choose, or say 'connect email' and pick them there.",
+          "status": "imported"
+        },
+        {
+          "room": "Memory",
+          "ask": "Your last meeting notes, or a ChatGPT or Claude export if you have one.",
+          "status": "imported"
+        },
+        {
+          "room": "Calendar",
+          "ask": "Say 'connect calendar' and I will read who you meet and how often.",
+          "status": "imported"
+        }
+      ],
+      "writes": [
+        "company/services.md",
+        "clients/",
+        "memory/imported/"
+      ]
+    },
+    {
+      "id": "connectors",
+      "title": "Connect",
+      "questions": [
+        "GitHub: is your private online copy connected yet? If not, we do it now: it is the backup and what links your phone. (yes, or let's do it)",
+        "Email: connect it? (yes or no)",
+        "Calendar: connect it? (yes or no)",
+        "Meeting recorder: which one, if any, and connect it? (yes or no)"
+      ],
+      "writes": [
+        "company/tools.md"
+      ]
+    },
+    {
+      "id": "reveal",
+      "title": "Here is your business as I understand it",
+      "say": "Read this back with me. Confirmed facts are stated plainly. Anything I imported or guessed has a question mark; tell me yes, no or the correction and I will fix it before we go on.",
+      "writes": [
+        "company/*.md status updates"
+      ]
+    },
+    {
+      "id": "skills",
+      "title": "Your first three skills",
+      "say": "From the three tasks you hate, I have drafted three taught tasks, each a command in your words. Pick one and we run it now on something real.",
+      "writes": [
+        "skills/"
+      ]
+    },
+    {
+      "id": "done",
+      "title": "Done for today",
+      "say": "Saved. Here is what the brain knows, what it can do today, and the three things to try this week. Open the guide any time. Saving is automatic; close every chat with /learned so what you decided gets written down.",
+      "writes": [
+        "memory/onboarding.json#complete",
+        "README.md#today"
+      ]
+    }
+  ]
+}

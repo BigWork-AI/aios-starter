@@ -1,0 +1,7 @@
+# Written by install.sh. Machine-readable manifest of this brain.
+company: "%%COMPANY%%"
+slug: %%SLUG%%
+engine: %%ENGINE_VERSION%%
+harness: claude-code
+installed: YYYY-MM-DD
+private_folder: %%PRIVATE%%
