@@ -20,6 +20,11 @@ history lives in `ledger.md` files and `memory/`. Do not copy a fact into a seco
 owner marks restricted during a session is not written here; say "not saved here" and move on.
 Before pulling in any outside material (website, emails, files, exports) state what will be read
 and what will be skipped, and wait for a yes.
+**Screen before reading.** Never open a folder the owner points at, and never read a file from it
+directly. Run `python3 .aios/tools/gather.py <folder>` first: it screens every file for keys,
+passwords and card or bank numbers *before* anything is read, copies only the clean ones into
+`inbox/`, and names (never quotes) what it left behind. Read only what it kept. A file it could
+not screen is read only when the owner names that file.
 
 **Draft, never send.** This brain drafts messages, quotes, posts and plans. A person sends them.
 No outside action (send, spend, post, delete, deploy) without an explicit yes in the same session.
