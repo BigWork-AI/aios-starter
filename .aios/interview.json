@@ -23,7 +23,7 @@
       "title": "Your website first",
       "say": "Before I ask you anything, give me your website address. I will read it, and what the public web says about %%COMPANY%%, so I only ask what I cannot find.",
       "questions": [
-        "What is your website address? Say 'no website' if there is none."
+        "What is your website address? No website is fine: just say 'no website' and I will ask instead."
       ],
       "consent": "I will read the public pages on that address, fifteen at most: home, services, prices, about, team, locations, FAQs, reviews and contact. Then I will search the web for %%COMPANY%% by name and read up to five public pages about you on other sites, such as a Google or Yelp listing, a directory, or a news story. I will not log in, fill in any form, or read anything that needs a password. Anything I find is marked as from your website or from the web until you confirm it. Go ahead?",
       "then": "Write every fact found as source=website <page> or source=web <page>, status=imported; web facts never overwrite website facts, and a disagreement between them goes to the gaps. Then say what you found in three or four plain sentences, and list the gaps: each later question neither answered, plus anything that looks out of date or contradicts itself. Save the gaps to memory/onboarding.json#gaps.",
@@ -38,12 +38,13 @@
     {
       "id": "first_job",
       "title": "Your first real job, in a few minutes",
-      "say": "Here are three things I can do for %%COMPANY%% right now from what I just read. Pick one and I will do it while you watch.",
+      "say": "Let's pick one useful job I can finish for %%COMPANY%% in a few minutes, so you see me work before I ask you much. For example: a follow-up email to a customer who went quiet, this week's short blog post, or your price list as one clean page. Any of those, or tell me yours.",
       "offer_rules": [
-        "Offer exactly three, each built only from what the website and web look-up found, each finished in under five minutes, each a single draft the owner can use today.",
-        "Right-sized examples: a follow-up email to a customer who asked for a quote and went quiet; this week's short blog post or social post from one service on the site; the price list or services page rewritten as one clear page; a reply to the most common question in the reviews or FAQs; a short thank-you to a customer who left a review.",
-        "Never offer anything that runs over days, touches money or needs an account: no invoicing, no chasing every client, no sending, no posting, no campaigns.",
-        "Write the draft in the voice the website uses until the owner's own voice is learned, and say so in one line.",
+        "Agree one job with the owner. Suggest from what the website and web look-up found; if the owner names their own, take it if it is right-sized, and if not, offer the nearest version that is.",
+        "No website: ask two quick questions first (what do you sell, and one customer you are dealing with right now), then suggest from those answers.",
+        "Right-sized means finished in under five minutes as one draft the owner can use today. Examples: a follow-up email to a customer who asked for a quote and went quiet; this week's short blog or social post from one service; the price list or services page as one clean page; a reply to the question customers ask most; a thank-you to a customer who left a review.",
+        "Never agree to anything that runs over days, touches money or needs an account: no invoicing, no chasing every client, no sending, no posting, no campaigns. Say why in one line and offer the smaller version.",
+        "Write the draft in the voice the website uses (or the owner's spoken words) until the owner's own voice is learned, and say so in one line.",
         "Draft only. Save it to inbox/review/ and say where. Nothing is sent or published."
       ],
       "then": "Show the finished draft. Ask one question: 'Would you use this?' Write the answer to memory/onboarding.json#first_job. Then go on to the questions, which are now only the gaps.",

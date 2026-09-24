@@ -40,11 +40,16 @@ start asking. Otherwise say the section's consent line and wait for a yes, then:
 Straight after the website and web read, do one real job, so the owner sees the brain work inside
 the first fifteen minutes. The spec's `first_job` section has the rules; the point of them:
 
-- **Right-sized.** Three offers, each built only from what was just read, each finished in under
-  five minutes, each one draft the owner can use today. Good: a follow-up to a customer who asked
-  for a quote and went quiet; this week's short blog or social post from one service on the site;
-  the price list rewritten as one clear page; a reply to the question the reviews ask most; a
-  thank-you to a customer who left a review.
+- **Agree one job, together.** Say the `first_job` line: one useful job, finished in a few
+  minutes, with three examples (a follow-up to a quiet customer, this week's blog post, the price
+  list as one clean page), "or tell me yours". Suggest from what was just read. If the owner names
+  their own and it is right-sized, do it; if not, say why in one line and offer the smaller version.
+- **No website?** That is fine. Ask two quick questions (what do you sell, and one customer you
+  are dealing with right now) and suggest from those.
+- **Right-sized** means finished in under five minutes as one draft the owner can use today. Good:
+  a follow-up to a customer who asked for a quote and went quiet; this week's short blog or social
+  post from one service; the price list as one clear page; a reply to the question customers ask
+  most; a thank-you to a customer who left a review.
 - **Not right-sized, never offered:** anything over days, anything touching money or needing an
   account, anything sent or posted. No invoicing, no chasing every client, no campaigns.
 - Write in the voice the website uses and say so; the owner's own voice comes later.
