@@ -9,6 +9,14 @@ files to answer questions, draft messages, file meetings and run the small jobs 
 in your own account. BigWork installs it, tunes it, and can be removed at any time. The knowledge
 stays yours.
 
+## Talk to it, do not type
+
+Everything you tell the brain can be spoken. On a Mac press the microphone key, or tap the Globe
+(fn) key twice, say what you mean, press Return. On Windows hold the Windows key and press H. On
+the phone use the microphone on the keyboard. Brain-dump style is fine: it sorts the words into
+the right files. If nothing happens on a Mac, dictation is off: System Settings, Keyboard,
+Dictation, turn it on once.
+
 ## What it does this week
 
 - **Answers questions about your business** from what you told it in the interview and what you let

@@ -184,6 +184,7 @@ git add memory/install-receipts.md && git commit -q -m "Install receipt $TODAY" 
 say "Done. Opening the interview."
 echo "Your brain: $DEST"
 echo "Private folder (never read by the brain): $PRIVATE"
+echo "Talk, do not type: on a Mac press the microphone key (or tap the Globe/fn key twice) and speak your answers. Windows: hold the Windows key and press H."
 if need claude; then
   exec claude "/start"
 else

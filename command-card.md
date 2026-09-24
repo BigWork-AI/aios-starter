@@ -2,6 +2,8 @@
 
 Six commands. Questions need no command: ask the brain anything in plain words, in any window.
 
+**Talk, do not type.** Mac: press the microphone key, or tap the Globe (fn) key twice, speak, press Return. Windows: hold the Windows key and press H. Phone: the microphone on the keyboard. If dictation is off on a Mac, turn it on under System Settings, Keyboard, Dictation.
+
 | Type | What happens |
 |---|---|
 | `/start` | The kickoff interview. Run once; run again to finish skipped parts. |

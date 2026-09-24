@@ -14,7 +14,7 @@
     {
       "id": "welcome",
       "title": "Hello",
-      "say": "I am your BigWork AI-OS. I know nothing about %%COMPANY%% yet. Over the next 20 to 30 minutes I will ask you about the business and show you where things live. Everything you tell me is written to plain files you own. You can stop at any point and pick up later. Ready?",
+      "say": "I am your BigWork AI-OS. I know nothing about %%COMPANY%% yet. Over the next 20 to 30 minutes I will ask you about the business and show you where things live. Everything you tell me is written to plain files you own. You can stop at any point and pick up later. Talk, do not type. On a Mac press the microphone key, or tap the Globe (fn) key twice, and just speak; press Return when you are done. On Windows hold the Windows key and press H. Rambling is fine: I sort it out. Ready?",
       "writes": []
     },
     {
