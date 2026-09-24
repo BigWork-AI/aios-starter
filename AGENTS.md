@@ -76,7 +76,7 @@ company works: tone, things never to say, people to always copy, hours, seasons.
 Plain words work as well as commands. "Set up my company brain", "let's start" or "hello" on a
 brain that has not finished `/start` means run the start playbook. "File that meeting" means
 `/meeting`. "Remember what we learned" means `/learned`. "Add a client" means `/client`. "Do the
-weekly review" means `/week`. "Teach you something" or "I hate doing X" means `/teach`. "Save"
+weekly review" means `/week`. "Teach you something", "I wish I did not have to do X" or "I hate doing X" means `/teach`. "Save"
 means `/save`. The owner never has to know the slash names.
 
 `/start` interview and setup · `/meeting` file a meeting that was not recorded (recorded meetings

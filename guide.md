@@ -5,7 +5,7 @@ Written for the owner of %%COMPANY%%. Print it if you like.
 ## What this is
 
 A private place where your business is written down in plain files, and an AI that reads those
-files to answer questions, draft messages, file meetings and run the small jobs you hate. It lives
+files to answer questions, draft messages, file meetings and run the small jobs you would rather not do. It lives
 in your own account. BigWork installs it, tunes it, and can be removed at any time. The knowledge
 stays yours.
 
@@ -23,7 +23,7 @@ Dictation, turn it on once.
   it read: services, prices, customers, who does what.
 - **Files your meetings by itself.** Recorded meetings are read and filed to the right client or
   operations folder, with promises pulled out and dated. You confirm; it does not guess.
-- **Runs three skills** written from the three tasks you said you hate. They draft; you approve.
+- **Runs three skills** set up from the three things you said you wish you did not have to do. They draft; you approve.
 - **Works from your laptop or your phone.** Saving happens on its own when a session ends, so a
   change on one shows on the other next time you open it.
 

@@ -104,9 +104,9 @@
     },
     {
       "id": "pain",
-      "title": "What you hate doing",
+      "title": "What you wish you did not have to do",
       "questions": [
-        "What are the three tasks you do every week that you hate, or that eat time they should not?",
+        "What are three things you do every week but wish you did not have to, or that eat time they should not?",
         "For each, what does a good result look like, and what does it cost you today when it goes wrong?"
       ],
       "writes": [
@@ -178,7 +178,7 @@
     {
       "id": "skills",
       "title": "Your first three skills",
-      "say": "From the three tasks you hate, I have drafted three taught tasks, each a command in your words. Pick one and we run it now on something real.",
+      "say": "From the three things you wish you did not have to do, I have set up three jobs I can do for you, each named in your words. Pick one and we run it now on something real.",
       "writes": [
         "skills/"
       ]

@@ -1,6 +1,6 @@
 # /teach — teach the brain a task
 
-Turns a task the owner hates into a reusable command, written in the owner's words.
+Turns a task the owner wishes they did not have to do into a reusable command, written in the owner's words.
 
 1. Ask the owner to describe the task the way they would tell a new hire: when it comes up, what a
    good result looks like, what goes wrong, who is involved, which files or tools it touches.
