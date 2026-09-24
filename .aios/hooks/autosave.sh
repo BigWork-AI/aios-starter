@@ -10,6 +10,7 @@ if [ -z "$(git status --porcelain)" ] && [ "$branch" = main ]; then
   git remote get-url origin >/dev/null 2>&1 && git push -q origin main 2>/dev/null
   exit 0
 fi
+python3 .aios/tools/frontpage.py >/dev/null 2>&1 || true
 git add -A
 if ! python3 .aios/tools/check.py --staged; then
   echo "Not saved: the checks above found something that must not go in the brain. Fix it, then /save."

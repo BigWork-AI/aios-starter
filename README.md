@@ -3,9 +3,23 @@
 Built on BigWork AI-OS. This is where %%COMPANY%% keeps what it knows and how it works, in plain
 files you own, with an AI that reads them and does the work.
 
-## What the brain knows today
+<!-- aios:frontpage-begin -->
+## What I know
 
-- (fills in when `/start` finishes)
+- Nothing yet. Say "set up my company brain" or type `/start`.
+
+## Ready for your review
+
+- Nothing waiting.
+
+## Work I am handling for you
+
+- No recurring jobs set up yet.
+
+## Questions for you
+
+- None.
+<!-- aios:frontpage-end -->
 
 ## What to try first
 
@@ -24,6 +38,6 @@ files you own, with an AI that reads them and does the work.
 ## Where to look
 
 Open [guide.md](guide.md) for what you got and how it grows, and [command-card.md](command-card.md)
-for the six commands. Everything else is a folder with a README inside.
+for the commands. Everything else is a folder with a README inside.
 
 Support: BigWork AI. Engine version in `.aios/VERSION`.

@@ -48,30 +48,36 @@ def write(job: str, argv: list) -> int:
     return 0
 
 
-def check(job: str, argv: list) -> int:
-    max_age = 2.0
-    if '--max-age-days' in argv:
-        max_age = float(argv[argv.index('--max-age-days') + 1])
+def describe(job: str, max_age: float = 2.0):
+    """Return (ok, sentence) for the job's last run. The same words the weekly review and the front page use."""
     path = RECEIPTS / f'{job}.json'
     if not path.exists():
-        print(f'{job}: has never run (no receipt).'); return 1
+        return False, f'{job}: has never run (no receipt).'
     try:
         receipt = json.loads(path.read_text())
         ran_at = datetime.datetime.fromisoformat(receipt['ran_at'])
     except (ValueError, KeyError):
-        print(f'{job}: the receipt is unreadable; treat the job as not running.'); return 1
-    age = datetime.datetime.now().astimezone() - ran_at
-    days = age.total_seconds() / 86400
+        return False, f'{job}: the receipt is unreadable; treat the job as not running.'
+    days = (datetime.datetime.now().astimezone() - ran_at).total_seconds() / 86400
     when = ran_at.strftime('%Y-%m-%d %H:%M')
     summary = ', '.join(f'{k} {v}' for k, v in receipt.get('counts', {}).items()) or 'no counts'
     status = receipt.get('status', 'unknown')
     if days > max_age:
-        print(f'{job}: last ran {when}, {days:.1f} days ago; it has gone quiet.'); return 1
+        return False, f'{job}: last ran {when}, {days:.1f} days ago; it has gone quiet.'
     if status == 'ok':
-        print(f'{job}: ran {when} ({summary}).'); return 0
+        return True, f'{job}: ran {when} ({summary}).'
     if status == 'needs-owner':
-        print(f'{job}: ran {when} and needs the owner: {receipt.get("note") or "see the review folder"}.'); return 1
-    print(f'{job}: ran {when} and failed: {receipt.get("note") or "no reason recorded"}.'); return 1
+        return False, f'{job}: ran {when} and needs the owner: {receipt.get("note") or "see the review folder"}.'
+    return False, f'{job}: ran {when} and failed: {receipt.get("note") or "no reason recorded"}.'
+
+
+def check(job: str, argv: list) -> int:
+    max_age = 2.0
+    if '--max-age-days' in argv:
+        max_age = float(argv[argv.index('--max-age-days') + 1])
+    ok, sentence = describe(job, max_age)
+    print(sentence)
+    return 0 if ok else 1
 
 
 def main(argv: list) -> int:

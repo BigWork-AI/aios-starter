@@ -154,7 +154,7 @@ backed up by the brain; back it up the way you back up any private document.
 EOF
 
 say "Wiring the checks"
-chmod +x scripts/setup.sh .aios/hooks/pre-commit .aios/tools/check.py .aios/tools/gather.py .aios/tools/receipt.py
+chmod +x scripts/setup.sh .aios/hooks/pre-commit .aios/tools/check.py .aios/tools/gather.py .aios/tools/receipt.py .aios/tools/frontpage.py
 ./scripts/setup.sh
 
 say "First save"

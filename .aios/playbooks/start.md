@@ -60,6 +60,7 @@ Pick one and run it on real material from the session. Show the result. Adjust o
 
 ## Finish
 
-Write `complete: true` and today's date to `memory/onboarding.json`. Update the "What the brain
-knows today" block in `README.md` with three lines. Run `sh .aios/hooks/autosave.sh`. Report in the house style:
+Write `complete: true` and today's date to `memory/onboarding.json`. Run
+`python3 .aios/tools/frontpage.py` so the front page shows what it knows, then
+`sh .aios/hooks/autosave.sh`. Report in the house style:
 what the brain knows, what it can do today, three things to try this week.
