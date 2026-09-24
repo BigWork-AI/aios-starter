@@ -181,11 +181,15 @@ printf -- '- %s installed BigWork AI-OS %s on this machine (harness: %s, private
   "$TODAY" "$ENGINE" "$(need claude && echo claude-code || echo none-yet)" "$PRIVATE" >> memory/install-receipts.md
 git add memory/install-receipts.md && git commit -q -m "Install receipt $TODAY" 2>/dev/null || true
 
-say "Done. Opening the interview."
+say "Done."
 echo "Your brain: $DEST"
 echo "Private folder (never read by the brain): $PRIVATE"
 echo "Talk, do not type: on a Mac press the microphone key (or tap the Globe/fn key twice) and speak your answers. Windows: hold the Windows key and press H."
-if need claude; then
+if [ -n "${CLAUDECODE:-}" ] || [ "${AIOS_NO_LAUNCH:-0}" = 1 ]; then
+  # Claude itself ran this (desktop app or CLI). Do not start a second Claude inside it.
+  echo "NEXT STEP FOR THE OWNER: in Claude, open the folder $DEST and say hello (or type /start). The interview begins there."
+elif need claude; then
+  echo "Opening the interview."
   exec claude "/start"
 else
   echo "Install Claude Code, open $DEST, and type /start."
