@@ -38,9 +38,24 @@ if [ -z "$COMPANY" ] || [ -z "$SLUG" ]; then
 fi
 # The name goes into files through sed, where & and | have special meanings.
 COMPANY_SED=$(printf '%s' "$COMPANY" | sed 's/[&|\\]/\\&/g')
-DEST="${AIOS_DEST:-$HOME/$SLUG-brain}"
-PRIVATE="${AIOS_PRIVATE:-$HOME/$SLUG-private}"
-DOCUMENTS="${AIOS_DOCUMENTS:-$HOME/$SLUG-documents}"
+# AIOS_HERE=1: build the brain in the folder we are standing in (the owner chose it in Claude), with
+# the private and documents folders beside it, so the same Claude session carries straight on.
+if [ "${AIOS_HERE:-0}" = 1 ]; then
+  HERE_DIR=$(pwd)
+  HERE_PARENT=$(dirname "$HERE_DIR")
+  if [ ! -d "$HERE_DIR/.aios" ] && [ -n "$(ls -A "$HERE_DIR" 2>/dev/null | grep -v -e '^\.DS_Store$' -e '^\.localized$')" ]; then
+    echo "This folder already has files in it: $HERE_DIR"
+    echo "The brain needs an empty folder of its own. Make a new empty folder, choose it in Claude, and say the sentence again."
+    exit 2
+  fi
+  DEST="${AIOS_DEST:-$HERE_DIR}"
+  PRIVATE="${AIOS_PRIVATE:-$HERE_PARENT/$SLUG-private}"
+  DOCUMENTS="${AIOS_DOCUMENTS:-$HERE_PARENT/$SLUG-documents}"
+else
+  DEST="${AIOS_DEST:-$HOME/$SLUG-brain}"
+  PRIVATE="${AIOS_PRIVATE:-$HOME/$SLUG-private}"
+  DOCUMENTS="${AIOS_DOCUMENTS:-$HOME/$SLUG-documents}"
+fi
 TODAY=$(date +%Y-%m-%d)
 PRIVATE_SED=$(printf '%s' "$PRIVATE" | sed 's/[&|\\]/\\&/g')
 DOCUMENTS_SED=$(printf '%s' "$DOCUMENTS" | sed 's/[&|\\]/\\&/g')
@@ -226,7 +241,11 @@ echo "Your brain: $DEST"
 echo "Private folder (never read by the brain): $PRIVATE"
 echo "Documents folder (put the files you want the brain to know here): $DOCUMENTS"
 echo "Talk, do not type: click the microphone in Claude's message box and speak your answers."
-if [ -n "${CLAUDECODE:-}" ] || [ "${AIOS_NO_LAUNCH:-0}" = 1 ]; then
+if { [ -n "${CLAUDECODE:-}" ] || [ "${AIOS_NO_LAUNCH:-0}" = 1 ]; } && [ -n "${HERE_DIR:-}" ] && [ "$DEST" = "$HERE_DIR" ]; then
+  # Claude ran this inside the folder that is now the brain: carry straight on in the same session.
+  echo "YOUR BRAIN IS READY, in this folder: $DEST"
+  echo "NEXT, FOR CLAUDE: read AGENTS.md in this folder, then run .aios/playbooks/start.md now, starting with the greeting. The owner does not need to open anything."
+elif [ -n "${CLAUDECODE:-}" ] || [ "${AIOS_NO_LAUNCH:-0}" = 1 ]; then
   # Claude itself ran this (desktop app or CLI). Do not start a second Claude inside it.
   echo "NEXT STEP FOR THE OWNER: in Claude, open the folder $DEST and say hello (or type /start). The interview begins there."
 elif need claude; then
