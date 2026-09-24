@@ -20,8 +20,10 @@ connector). Nothing is sent anywhere. Everything filed is marked `imported` unti
    `memory/follow-ups.md`. Add a dated row to the destination's ledger and update its `meta.yml`
    in the same save.
 7. Append a row to `memory/filed-meetings.md`: date, title, attendees, where it was filed, link.
-8. Write the receipt `memory/receipts/meeting-sweep.json`: run time, recordings seen, filed,
-   skipped, errors. A run with no receipt did not happen.
+8. Write the receipt: `python3 .aios/tools/receipt.py write meeting-sweep --status ok --count
+   seen=N --count filed=M --count skipped=K` (`--status needs-owner --note "..."` for an unknown
+   attendee or an undated promise; `--status failed --note "..."` if the recorder could not be
+   reached). A run with no receipt did not happen.
 9. Save (`sh .aios/hooks/autosave.sh`).
 10. Message the owner only if something needs them: an unknown attendee to route, a promise with
     no date, or a recorder that could not be reached. Otherwise stay silent; the weekly review

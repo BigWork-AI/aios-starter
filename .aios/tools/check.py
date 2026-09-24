@@ -21,7 +21,7 @@ REQUIRED = [
     'AGENTS.md', 'CLAUDE.md', 'README.md', 'aios.yml', '.aios/VERSION', '.aios/interview.json',
     'company/identity.md', 'company/services.md', 'company/customers.md', 'company/people.md',
     'company/access.md', 'company/tools.md', 'clients/README.md', 'skills/README.md',
-    'memory/README.md', 'inbox/README.md',
+    'memory/README.md', 'inbox/README.md', 'inbox/review/README.md',
 ]
 STATUSES = {'confirmed', 'imported', 'inferred', 'example'}
 SCAN_SUFFIXES = {'.md', '.yml', '.yaml', '.json', '.txt', '.csv', '.html', '.py', '.sh', '.env'}
