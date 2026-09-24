@@ -13,7 +13,7 @@
 #   AIOS_SOURCE=./aios-starter sh aios-starter/install.sh "Acme Roofing" acme-roofing
 #
 # Creates a private company brain for the named business, wires the checks, makes the private
-# folder outside the repository, and opens the kickoff interview. Safe to run twice: every step
+# folder and the documents drop folder outside the repository, and opens the kickoff interview. Safe to run twice: every step
 # checks before it acts.
 #
 # Where the kit comes from, in order:
@@ -40,7 +40,15 @@ fi
 COMPANY_SED=$(printf '%s' "$COMPANY" | sed 's/[&|\\]/\\&/g')
 DEST="${AIOS_DEST:-$HOME/$SLUG-brain}"
 PRIVATE="${AIOS_PRIVATE:-$HOME/$SLUG-private}"
+DOCUMENTS="${AIOS_DOCUMENTS:-$HOME/$SLUG-documents}"
 TODAY=$(date +%Y-%m-%d)
+PRIVATE_SED=$(printf '%s' "$PRIVATE" | sed 's/[&|\\]/\\&/g')
+DOCUMENTS_SED=$(printf '%s' "$DOCUMENTS" | sed 's/[&|\\]/\\&/g')
+# The documents folder is read (after screening); the private folder never is. Keep them apart,
+# and keep both outside the brain so nothing dropped in is saved to its history unscreened.
+case "$DOCUMENTS/" in
+  "$PRIVATE/"|"$PRIVATE/"*|"$DEST/"|"$DEST/"*) echo "The documents folder must be its own folder, outside the brain and outside the private folder: $DOCUMENTS"; exit 2 ;;
+esac
 
 say() { printf '\n== %s\n' "$*"; }
 need() { command -v "$1" >/dev/null 2>&1; }
@@ -130,7 +138,7 @@ cd "$DEST"
 say "Naming it"
 ENGINE=$(cat .aios/VERSION)
 for f in AGENTS.md README.md CLAUDE.md company/identity.md company/access.md guide.md .aios/interview.json; do
-  [ -f "$f" ] && sed -i.bak "s|%%COMPANY%%|$COMPANY_SED|g; s|%%ENGINE_VERSION%%|$ENGINE|g; s|%%PRIVATE%%|$PRIVATE|g" "$f" && rm -f "$f.bak"
+  [ -f "$f" ] && sed -i.bak "s|%%COMPANY%%|$COMPANY_SED|g; s|%%ENGINE_VERSION%%|$ENGINE|g; s|%%PRIVATE%%|$PRIVATE_SED|g; s|%%DOCUMENTS%%|$DOCUMENTS_SED|g" "$f" && rm -f "$f.bak"
 done
 if grep -q '%%COMPANY%%' aios.yml 2>/dev/null || [ ! -f aios.yml ]; then
   cat > aios.yml <<EOF
@@ -140,8 +148,11 @@ engine: $ENGINE
 harness: claude-code
 installed: $TODAY
 private_folder: $PRIVATE
+documents_folder: $DOCUMENTS
+upgrade: auto
 EOF
 fi
+grep -q '^documents_folder:' aios.yml || printf 'documents_folder: %s\n' "$DOCUMENTS" >> aios.yml
 
 say "Making the private folder outside the brain: $PRIVATE"
 mkdir -p "$PRIVATE"
@@ -151,6 +162,35 @@ mkdir -p "$PRIVATE"
 This folder is outside the company brain on purpose. Bank, payroll, contracts you have not chosen
 to share, personal matters: they live here. The brain never opens this folder. Nothing here is
 backed up by the brain; back it up the way you back up any private document.
+EOF
+
+say "Making the documents folder: $DOCUMENTS"
+mkdir -p "$DOCUMENTS"
+[ -f "$DOCUMENTS/ABOUT THIS FOLDER.md" ] || cat > "$DOCUMENTS/ABOUT THIS FOLDER.md" <<EOF
+# Documents for the $COMPANY brain
+
+Drop copies of anything you want the brain to know about in here: price lists, brochures,
+proposals and quotes, how-we-do-it notes, meeting notes, a ChatGPT or Claude export. PDFs and
+Word files are fine. Keep bank statements, payroll and anything personal out; those go in
+$PRIVATE.
+
+Check every file before you drop it in: PDFs, Word files, spreadsheets, notes. Open each one and
+make sure it has none of these:
+
+- bank or card numbers, account or routing numbers
+- passwords or logins
+- pay, salary or payroll figures
+- tax, social security or ID numbers
+- staff home addresses, personal phone numbers or health details
+
+If a file has any of them, delete that part or black it out and save a new copy, or leave it out.
+The brain catches some of this in text and Word files, but not all of it, and it cannot look
+inside most PDFs at all. You are the main check.
+
+The brain never opens this folder on its own. When you say "read my new documents", it checks each
+file for passwords and card or bank numbers first, reads only what passes, and tells you what it
+left behind. Files it cannot check, like most PDFs, it names and asks before reading; it reads
+those here and never copies them into the brain.
 EOF
 
 say "Wiring the checks"
@@ -184,6 +224,7 @@ git add memory/install-receipts.md && git commit -q -m "Install receipt $TODAY" 
 say "Done."
 echo "Your brain: $DEST"
 echo "Private folder (never read by the brain): $PRIVATE"
+echo "Documents folder (put the files you want the brain to know here): $DOCUMENTS"
 echo "Talk, do not type: on a Mac press the microphone key (or tap the Globe/fn key twice) and speak your answers. Windows: hold the Windows key and press H."
 if [ -n "${CLAUDECODE:-}" ] || [ "${AIOS_NO_LAUNCH:-0}" = 1 ]; then
   # Claude itself ran this (desktop app or CLI). Do not start a second Claude inside it.

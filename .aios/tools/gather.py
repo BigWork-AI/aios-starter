@@ -10,7 +10,11 @@ same secret scan as a save over every file it can read as text, and then:
   screened out  NOT copied, NOT read; named (never quoted) in the read-back and in a note in the
                 owner's private folder, so the owner knows what stayed behind and why
   unscreened    files the tool cannot read as text (PDFs, images, unknown types): NOT copied,
-                NOT read; named so the owner can say "read that one" file by file
+                NOT read; named so the owner can approve them, all at once or one by one
+
+A file already looked at in an earlier run, and unchanged since, is skipped and only counted, so the
+owner can keep adding to the same folder and say "read my new documents". The folder's own note to
+the owner (ABOUT THIS FOLDER.md) is never gathered.
 
 Prints a plain-words read-back and writes a receipt to memory/receipts/. Never prints file contents.
 This is a backstop for keys, tokens, passwords and card or bank numbers. It cannot recognise every
@@ -33,6 +37,7 @@ TEXT_SUFFIXES = (SCAN_SUFFIXES | {'.rtf', '.tsv', '.xml', '.eml', '.ics', '.vcf'
 OFFICE_SUFFIXES = {'.docx', '.xlsx', '.pptx'}
 MAX_BYTES = 5 * 1024 * 1024
 SKIP_DIRS = {'.git', 'node_modules', '__pycache__', '.Trash'}
+FOLDER_NOTE = 'ABOUT THIS FOLDER.md'
 
 
 def private_folder() -> Path:
@@ -67,16 +72,21 @@ def readable_text(path: Path):
     return None
 
 
-def gather(folder: Path, label: str) -> dict:
-    kept, screened, unscreened = [], [], []
+def gather(folder: Path, label: str, seen: dict) -> dict:
+    kept, screened, unscreened, earlier = [], [], [], []
     dest = ROOT / 'inbox' / label
     for path in sorted(p for p in folder.rglob('*') if p.is_file()):
         rel = path.relative_to(folder)
-        if any(part in SKIP_DIRS or part.startswith('.') for part in rel.parts):
+        if any(part in SKIP_DIRS or part.startswith('.') for part in rel.parts) or str(rel) == FOLDER_NOTE:
+            continue
+        stamp = f'{path.stat().st_size}:{int(path.stat().st_mtime)}'
+        if seen.get(str(rel)) == stamp:
+            earlier.append(str(rel))
             continue
         text = readable_text(path)
         if text is None:
             unscreened.append(str(rel))
+            seen[str(rel)] = stamp
             continue
         problems = scan_text(text, str(rel))
         if problems:
@@ -88,7 +98,8 @@ def gather(folder: Path, label: str) -> dict:
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(path, target)
         kept.append(str(rel))
-    return {'kept': kept, 'screened_out': screened, 'unscreened': unscreened}
+        seen[str(rel)] = stamp
+    return {'kept': kept, 'screened_out': screened, 'unscreened': unscreened, 'looked_at_before': earlier}
 
 
 def main(argv: list) -> int:
@@ -106,12 +117,20 @@ def main(argv: list) -> int:
     if ROOT in folder.parents or folder == ROOT:
         print('That folder is inside the brain already; point me at where the files live now.')
         return 1
-    today = datetime.date.today().isoformat()
-    result = gather(folder, label)
-    receipt = {'date': today, 'folder': str(folder), 'label': label, **result}
+    private = private_folder().resolve()
+    if folder == private or private in folder.parents:
+        print('That is your private folder. The brain never reads it; point me at a different folder.')
+        return 1
+    now = datetime.datetime.now()
+    today = now.date().isoformat()
     receipts = ROOT / 'memory/receipts'
     receipts.mkdir(parents=True, exist_ok=True)
-    (receipts / f'gather-{label}-{today}.json').write_text(json.dumps(receipt, indent=2) + '\n')
+    seen_file = receipts / f'seen-{label}.json'
+    seen = json.loads(seen_file.read_text()) if seen_file.exists() else {}
+    result = gather(folder, label, seen)
+    seen_file.write_text(json.dumps(seen, indent=2, sort_keys=True) + '\n')
+    receipt = {'date': today, 'folder': str(folder), 'label': label, **result}
+    (receipts / f'gather-{label}-{now:%Y-%m-%d-%H%M%S}.json').write_text(json.dumps(receipt, indent=2) + '\n')
 
     if result['screened_out']:
         note = private_folder() / 'screened-out.md'
@@ -124,14 +143,16 @@ def main(argv: list) -> int:
 
     k, s_, u = len(result['kept']), len(result['screened_out']), len(result['unscreened'])
     print(f'Looked at "{folder.name}".')
+    if result['looked_at_before']:
+        print(f"Skipped {len(result['looked_at_before'])} file(s) already looked at before and unchanged since.")
     print(f'Kept {k} file(s) for reading, now in inbox/{label}/.' if k else 'Kept nothing: no readable files found.')
     if s_:
         names = ', '.join(i['file'] for i in result['screened_out'])
         print(f'Left {s_} file(s) where they were, unread, because they look like they hold private numbers or passwords: {names}. Listed in your private folder.')
     if u:
         names = ', '.join(result['unscreened'])
-        print(f'Could not screen {u} file(s), so I did not copy or read them: {names}. Say the name of any you want read, one at a time.')
-    print(f'Receipt: memory/receipts/gather-{label}-{today}.json')
+        print(f'Could not screen {u} file(s), so I did not copy or read them: {names}. Say "read them all" or name the ones you want read; I read those where they are and never copy them into the brain.')
+    print(f'Receipt: memory/receipts/gather-{label}-{now:%Y-%m-%d-%H%M%S}.json')
     return 0
 
 

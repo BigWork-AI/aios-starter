@@ -4,3 +4,5 @@
 .DS_Store
 inbox/quarantine/*
 !inbox/quarantine/README.md
+# local stamps, never shared
+memory/receipts/upgrade-check.json

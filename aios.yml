@@ -5,3 +5,4 @@ engine: %%ENGINE_VERSION%%
 harness: claude-code
 installed: YYYY-MM-DD
 private_folder: %%PRIVATE%%
+upgrade: auto          # auto: the engine keeps itself current | ask: the owner is asked first

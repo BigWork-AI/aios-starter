@@ -24,7 +24,8 @@ and what will be skipped, and wait for a yes.
 directly. Run `python3 .aios/tools/gather.py <folder>` first: it screens every file for keys,
 passwords and card or bank numbers *before* anything is read, copies only the clean ones into
 `inbox/`, and names (never quotes) what it left behind. Read only what it kept. A file it could
-not screen is read only when the owner names that file.
+not screen is read only after the owner has heard its name and said yes to it (one yes may cover a
+list the owner has just heard read out), and is read where it is: never copied into the brain.
 
 **Draft, never send.** This brain drafts messages, quotes, posts and plans. A person sends them.
 No outside action (send, spend, post, delete, deploy) without an explicit yes in the same session.
@@ -68,7 +69,7 @@ company works: tone, things never to say, people to always copy, hours, seasons.
 | Meetings, learnings, imported material | `memory/` |
 | Things dropped in but not yet filed | `inbox/` |
 | The company's own skills | `skills/` |
-| Engine (BigWork AI-OS): playbooks, tools, templates | `.aios/` (replaced on upgrade; do not edit) |
+| Engine (BigWork AI-OS): playbooks, tools, templates | `.aios/` (BigWork's; replaced whole by `/upgrade`, never edit) |
 
 ## Commands
 
@@ -81,5 +82,5 @@ means `/save`. The owner never has to know the slash names.
 `/start` interview and setup · `/meeting` file a meeting that was not recorded (recorded meetings
 file themselves through the sweep in `.aios/playbooks/meeting-sweep.md`) · `/learned` capture what a
 session taught · `/client` add or update a client · `/week` weekly review · `/teach` teach the brain
-a task. `/save` saves on demand; saving is otherwise automatic. Each one follows the playbook of the
+a task · `/upgrade` bring the engine up to date now (it also keeps itself current on its own). `/save` saves on demand; saving is otherwise automatic. Each one follows the playbook of the
 same name in `.aios/playbooks/`.

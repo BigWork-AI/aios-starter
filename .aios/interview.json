@@ -5,6 +5,7 @@
   "rules": [
     "One question at a time. Wait for the answer before asking the next.",
     "Write each answer to its file immediately with source=owner, date=today, status=confirmed, and say where it went in plain words.",
+    "When the website already answered a question, do not ask it cold: read the website's answer back as a question ('Your site says X. Still right?'). Ask the gaps in full.",
     "Update memory/onboarding.json after every section so a dropped session resumes at the same place.",
     "If the owner hesitates or says 'skip', mark the section skipped and move on. Never push.",
     "Never claim to know anything that is not written to a file with a status.",
@@ -16,6 +17,40 @@
       "title": "Hello",
       "say": "I am your BigWork AI-OS. I know nothing about %%COMPANY%% yet. Over the next 20 to 30 minutes I will ask you about the business and show you where things live. Everything you tell me is written to plain files you own. You can stop at any point and pick up later. Talk, do not type. On a Mac press the microphone key, or tap the Globe (fn) key twice, and just speak; press Return when you are done. On Windows hold the Windows key and press H. Rambling is fine: I sort it out. Ready?",
       "writes": []
+    },
+    {
+      "id": "website",
+      "title": "Your website first",
+      "say": "Before I ask you anything, give me your website address. I will read it, and what the public web says about %%COMPANY%%, so I only ask what I cannot find.",
+      "questions": [
+        "What is your website address? Say 'no website' if there is none."
+      ],
+      "consent": "I will read the public pages on that address, fifteen at most: home, services, prices, about, team, locations, FAQs, reviews and contact. Then I will search the web for %%COMPANY%% by name and read up to five public pages about you on other sites, such as a Google or Yelp listing, a directory, or a news story. I will not log in, fill in any form, or read anything that needs a password. Anything I find is marked as from your website or from the web until you confirm it. Go ahead?",
+      "then": "Write every fact found as source=website <page> or source=web <page>, status=imported; web facts never overwrite website facts, and a disagreement between them goes to the gaps. Then say what you found in three or four plain sentences, and list the gaps: each later question neither answered, plus anything that looks out of date or contradicts itself. Save the gaps to memory/onboarding.json#gaps.",
+      "writes": [
+        "company/identity.md",
+        "company/services.md",
+        "company/customers.md",
+        "company/people.md",
+        "memory/onboarding.json#gaps"
+      ]
+    },
+    {
+      "id": "first_job",
+      "title": "Your first real job, in a few minutes",
+      "say": "Here are three things I can do for %%COMPANY%% right now from what I just read. Pick one and I will do it while you watch.",
+      "offer_rules": [
+        "Offer exactly three, each built only from what the website and web look-up found, each finished in under five minutes, each a single draft the owner can use today.",
+        "Right-sized examples: a follow-up email to a customer who asked for a quote and went quiet; this week's short blog post or social post from one service on the site; the price list or services page rewritten as one clear page; a reply to the most common question in the reviews or FAQs; a short thank-you to a customer who left a review.",
+        "Never offer anything that runs over days, touches money or needs an account: no invoicing, no chasing every client, no sending, no posting, no campaigns.",
+        "Write the draft in the voice the website uses until the owner's own voice is learned, and say so in one line.",
+        "Draft only. Save it to inbox/review/ and say where. Nothing is sent or published."
+      ],
+      "then": "Show the finished draft. Ask one question: 'Would you use this?' Write the answer to memory/onboarding.json#first_job. Then go on to the questions, which are now only the gaps.",
+      "writes": [
+        "inbox/review/",
+        "memory/onboarding.json#first_job"
+      ]
     },
     {
       "id": "identity",
@@ -80,9 +115,9 @@
     {
       "id": "privacy",
       "title": "What stays out",
-      "say": "Before I pull anything in, here is what I will and will not take. I will read what you point me at: your website, a price list, a few emails you choose, meeting notes, a chat export. I will not read your bank, payroll, contracts you have not shown me, or anything personal. Anything like that goes in the private folder outside this brain, which I never open. If I see something that looks like a password or card number I will stop and ask.",
+      "say": "I have read your website. Before I pull anything else in, here is what I will and will not take. I will read what you put in your documents folder and what you point me at: a price list, a few emails you choose, meeting notes, a chat export. I will not read your bank, payroll, contracts you have not shown me, or anything personal. Anything like that goes in the private folder outside this brain, which I never open. If I see something that looks like a password or card number I will stop and ask.",
       "questions": [
-        "Is there anything else that must never go in here? Say it now and I will write the rule."
+        "Is there anything else that must never go in here, including anything I took from your website? Say it now and I will write the rule, and remove it if I already saved it."
       ],
       "writes": [
         "company/access.md"
@@ -91,21 +126,18 @@
     {
       "id": "uploads",
       "title": "Fill the rooms",
-      "say": "Now the rooms. For each one I will ask for one thing to put in it. Say 'skip' for any of them.",
+      "say": "Now your documents. I do not need you to find each file for me: I made one folder for them, and I will read what you put in it.",
       "asks": [
         {
-          "room": "Services",
-          "ask": "Your website address, or a price list or brochure file.",
-          "status": "imported"
+          "room": "Documents",
+          "ask": "Put every document or PDF you want me to know about into your documents folder: price lists, brochures, proposals and quotes, how-we-do-it notes, meeting notes, a ChatGPT or Claude export. Copies are fine; the originals stay where they are. Before you add any file (PDF, Word, spreadsheet, notes), open it and check it has none of these: bank or card numbers, account or routing numbers, passwords or logins, pay or salary figures, tax or ID numbers, staff home addresses or personal phone numbers, health details. If one does, delete that part or black it out and save a new copy, or leave the file out. I catch some of this in plain text and Word files, but not all of it, and I cannot look inside most PDFs at all, so you are the main check. Tell me when it is done.",
+          "folder": "documents_folder in aios.yml",
+          "status": "imported",
+          "privacy_check": "Before you add any file (PDF, Word, spreadsheet, notes), open it and check it has none of these: bank or card numbers, account or routing numbers, passwords or logins, pay or salary figures, tax or ID numbers, staff home addresses or personal phone numbers, health details. If one does, delete that part or black it out and save a new copy, or leave the file out. I catch some of this in plain text and Word files, but not all of it, and I cannot look inside most PDFs at all, so you are the main check."
         },
         {
           "room": "Customers",
           "ask": "Three to ten recent customer emails you choose, or say 'connect email' and pick them there.",
-          "status": "imported"
-        },
-        {
-          "room": "Memory",
-          "ask": "Your last meeting notes, or a ChatGPT or Claude export if you have one.",
           "status": "imported"
         },
         {
@@ -116,6 +148,7 @@
       ],
       "writes": [
         "company/services.md",
+        "company/identity.md",
         "clients/",
         "memory/imported/"
       ]
