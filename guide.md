@@ -11,11 +11,9 @@ stays yours.
 
 ## Talk to it, do not type
 
-Everything you tell the brain can be spoken. On a Mac press the microphone key, or tap the Globe
-(fn) key twice, say what you mean, press Return. On Windows hold the Windows key and press H. On
-the phone use the microphone on the keyboard. Brain-dump style is fine: it sorts the words into
-the right files. If nothing happens on a Mac, dictation is off: System Settings, Keyboard,
-Dictation, turn it on once.
+Everything you tell the brain can be spoken. Click the microphone in Claude's message box, on the
+laptop or the phone, and say what you mean. Brain-dump style is fine: it sorts the words into the
+right files.
 
 ## What it does this week
 

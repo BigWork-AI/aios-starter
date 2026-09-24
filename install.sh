@@ -225,7 +225,7 @@ say "Done."
 echo "Your brain: $DEST"
 echo "Private folder (never read by the brain): $PRIVATE"
 echo "Documents folder (put the files you want the brain to know here): $DOCUMENTS"
-echo "Talk, do not type: on a Mac press the microphone key (or tap the Globe/fn key twice) and speak your answers. Windows: hold the Windows key and press H."
+echo "Talk, do not type: click the microphone in Claude's message box and speak your answers."
 if [ -n "${CLAUDECODE:-}" ] || [ "${AIOS_NO_LAUNCH:-0}" = 1 ]; then
   # Claude itself ran this (desktop app or CLI). Do not start a second Claude inside it.
   echo "NEXT STEP FOR THE OWNER: in Claude, open the folder $DEST and say hello (or type /start). The interview begins there."
