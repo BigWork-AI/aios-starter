@@ -2,6 +2,16 @@
 
 Plain English, newest on top. `/upgrade --check` shows the owner the entry for the version on offer.
 
+## 0.3.5
+- Your skills show up where you'd look: type / in a new chat to see them, or just ask for one in
+  your own words. Skills you taught before this update are moved there for you.
+- Every new skill meets a quality bar: it reads your numbers from your files instead of guessing,
+  says exactly what "tight" or "overdue" means, checks what could clash, drafts in your voice, and
+  puts any date it promises on your follow-up list.
+- A tidy-up check after your files and accounts are read: the same customer twice, one product with
+  two prices, an old reminder for a paid invoice, a date that can't be kept. Each one is a quick
+  question for you.
+
 ## 0.3.4
 - Your voice is your first skill. The brain builds it from a few real samples of you writing and
   talking (emails to customers and friends, a meeting where you talk, a blog post), or starts from

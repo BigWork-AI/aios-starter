@@ -13,7 +13,8 @@ run it. The brain leads; the owner answers; a BigWork person may be sitting alon
 ## The order: read first, ask last
 
 The website and the web, then what stays out and the owner's documents folder, then one real job
-built on all of that, then the accounts they choose to connect, then their voice (their first skill). Only then the questions, and only about what all of that
+built on all of that, then the accounts they choose to connect, then a tidy-up check of everything read, then their
+voice (their first skill). Only then the questions, and only about what all of that
 left open. The questions fill holes in the data; they are not the main way facts get in.
 
 ## The website, before any question
@@ -179,6 +180,29 @@ Write everything as `source: <account> <item>`, `status: imported`, and cross of
 answers. Then say in two or three plain sentences what came in and what is still missing. The
 questions come next, and only for those gaps.
 
+## The tidy-up check
+
+Straight after the accounts, before the voice and the questions. Every business has mess in its
+files, and finding it is one of the most useful things the brain does on day one. Say the
+section's line, then:
+
+- Run `python3 .aios/tools/tidy.py`. It lists the mechanical ones: the same email or phone on two
+  customer rows, one item priced differently in two files, files that look like old copies.
+- Then read for the judgement ones across everything read so far:
+  - **Prices, discounts and terms that differ between files.** The approved one wins (a call, an
+    email or a signed quote saying so); then the newest. A draft, scratchpad or older price list is
+    history. Say which file said what.
+  - **Money that does not line up.** A reminder for an invoice already paid; a payment the customer
+    says they sent that is not matched; an invoice past due with no word.
+  - **Promises past their date,** in emails, meeting notes or the follow-up list.
+  - **Dates that clash.** A customer's date against a supplier delivery, stock on hand or other
+    orders in the queue.
+- Raise each as one short question with its sources, most costly first, eight at most (offer the
+  rest as a list). Never decide for the owner. Write each answer straight away: the confirmed value
+  as `confirmed`, the other kept as history with its source. When the real fix belongs in the
+  store, accounting or CRM system (a duplicate customer, a paid invoice), mark it in the brain and
+  say where the owner fixes it.
+
 ## The voice section: the first skill
 
 Straight after the accounts, before the questions. Say the section's line. The goal is a voice
@@ -197,14 +221,14 @@ good enough that the owner reads a draft and says "that sounds like me".
 - **Privacy.** From meetings, only the owner's own lines, only from meetings about this business.
   Emails to friends or colleagues teach style only: file none of their content, quote a few words
   at most.
-- **Write `skills/voice.md`** from `.aios/templates/voice.md`: the voice in one line, how they open and
+- **Write `.claude/skills/voice/SKILL.md`** from `.aios/templates/voice.md`: the voice in one line, how they open and
   close, sentence shape, words they use and never use, how they say no or chase money, what changes
   between customers, colleagues and friends, how they talk out loud, and a row per sample. Add it
   to `skills/README.md` as the first skill. Read it back in four or five plain lines.
 - **Test it now.** Draft one real message from the follow-up list in this voice. Ask "Does this
   sound like you? What would you change?" Fix the file once from the answer, and write the date and
   the correction under "Checked with the owner". From then on every draft, and every other skill
-  that drafts, reads `skills/voice.md` first.
+  that drafts, reads `.claude/skills/voice/SKILL.md` first.
 
 ## The reveal
 
@@ -220,13 +244,15 @@ Then "ask me something." Answer only from the files. If the answer is not there,
 ## The next three skills
 
 The voice is skill one (above). From the pain answers, draft three more taught tasks using
-`.aios/templates/skill.md`, each one reading `skills/voice.md` before it drafts, one file each in
-`skills/` (this is what `/teach` does; run it three times). Name them the way the owner said them ("chase-quotes", not "follow-up-automation").
+`.aios/templates/skill.md`, each one reading `.claude/skills/voice/SKILL.md` before it drafts, one skill each in
+`.claude/skills/<name>/SKILL.md` (this is what `/teach` does, quality bar included; run it three times). Name them the way the owner said them ("chase-quotes", not "follow-up-automation").
 Pick one and run it on real material from the session. Show the result. Adjust once. Save.
 
 ## Finish
 
-Write `complete: true` and today's date to `memory/onboarding.json`. Run
+Write `complete: true` and today's date to `memory/onboarding.json`. Tell the owner where their
+skills are: "Your skills are ready: your voice plus the three we just built. Open a new chat in this
+folder and type / to see them, or just ask for one in your own words." Then run
 `python3 .aios/tools/frontpage.py` so the front page shows what it knows, then
 `sh .aios/hooks/autosave.sh`. Report in the house style:
 what the brain knows, what it can do today, three things to try this week.

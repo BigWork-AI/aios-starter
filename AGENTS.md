@@ -54,7 +54,7 @@ rather than guess.
 describe the state of a client, deal or job from the files alone; name the evidence or say it is
 unverified.
 
-**Sound like the owner.** Anything drafted for the owner to send or post follows `skills/voice.md`
+**Sound like the owner.** Anything drafted for the owner to send or post follows `.claude/skills/voice/SKILL.md`
 once it exists. Until then, say that the draft is not yet in their voice.
 
 **Plain English.** Write for the owner, not for a specialist. Short answers: the point, why it
@@ -83,7 +83,7 @@ company works: tone, things never to say, people to always copy, hours, seasons.
 | Each client, prospect or partner | `clients/<name>/` (`meta.yml` now, `ledger.md` history, `memory/` facts) |
 | Meetings, learnings, imported material | `memory/` |
 | Things dropped in but not yet filed | `inbox/` |
-| The company's own skills | `skills/` |
+| The company's own skills (voice first) | `.claude/skills/<name>/SKILL.md`, listed in `skills/README.md` |
 | Engine (BigWork AI-OS): playbooks, tools, templates | `.aios/` (BigWork's; replaced whole by `/upgrade`, never edit) |
 
 ## Commands

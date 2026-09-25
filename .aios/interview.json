@@ -107,6 +107,26 @@
       ]
     },
     {
+      "id": "tidy",
+      "title": "Tidy-up check",
+      "say": "Before I ask you anything, a quick tidy-up. Every business has a bit of mess in its files: the same customer twice, two prices for one thing, an old reminder nobody deleted. Here's what I found. Tell me which is right and I'll fix the brain.",
+      "checks": [
+        "Run python3 .aios/tools/tidy.py for the mechanical ones: the same email or phone on two customer rows, one item with two prices, files that look like old copies.",
+        "Then read for the judgement ones, across everything read so far: a price, discount or term that differs between files (the approved or newest one wins; a draft, scratchpad or older file is history, and say which file said what); money that does not line up (a reminder for an invoice already paid, a payment claimed but not matched, an invoice past due); promises past their date; customer dates that clash with supplier or stock dates."
+      ],
+      "rules": [
+        "Raise each as a short question with the files it came from, one line each, most costly first. Never decide for the owner.",
+        "Write each answer at once: the confirmed value as confirmed, the loser kept as history with its source. The store, accounting or CRM system stays the master for its own records; say so when the real fix belongs there.",
+        "Do not turn this into a lecture: at most eight items; offer the rest as a list for later."
+      ],
+      "writes": [
+        "company/*.md",
+        "clients/",
+        "memory/follow-ups.md",
+        "memory/onboarding.json#tidy"
+      ]
+    },
+    {
       "id": "voice",
       "title": "Your voice, your first skill",
       "say": "Now your voice, so everything I draft sounds like you and not like a robot. I build it from a few real samples of you writing and talking, and it becomes your first skill: every email, quote and post I draft uses it. Already got a voice guide or saved voice instructions from ChatGPT or Claude? Paste it or drop it in. I'll start from it and sharpen it with your real samples.",
@@ -121,11 +141,11 @@
         "From meetings, use only the owner's own lines, and only from meetings about this business.",
         "Samples written to friends or colleagues teach style only: never file their content, and quote at most a few words.",
         "With an existing voice guide: keep what the samples confirm, flag in one line anything the samples contradict, and add what it is missing (openings, sign-offs, saying no, spoken habits).",
-        "Write the result to skills/voice.md from .aios/templates/voice.md, with a row per sample in 'Where this came from'. Then read the voice back in four or five plain lines.",
-        "Test it straight away: draft one real message from the follow-up list in this voice. Ask 'Does this sound like you? What would you change?' Fix skills/voice.md once from the answer and write the date and the correction under 'Checked with the owner'."
+        "Write the result to .claude/skills/voice/SKILL.md from .aios/templates/voice.md, with a row per sample in 'Where this came from'. Then read the voice back in four or five plain lines.",
+        "Test it straight away: draft one real message from the follow-up list in this voice. Ask 'Does this sound like you? What would you change?' Fix .claude/skills/voice/SKILL.md once from the answer and write the date and the correction under 'Checked with the owner'."
       ],
       "writes": [
-        "skills/voice.md",
+        ".claude/skills/voice/SKILL.md",
         "skills/README.md",
         "memory/onboarding.json#voice"
       ]
@@ -203,7 +223,8 @@
       "title": "Your next three skills",
       "say": "Your voice is skill number one. You also told me three things you wish you didn't have to do. I've set each one up as a job I can do for you, in your voice, named the way you said it. Pick one and we'll run it right now on something real.",
       "writes": [
-        "skills/"
+        ".claude/skills/",
+        "skills/README.md"
       ]
     },
     {

@@ -1,3 +1,8 @@
+---
+name: voice
+description: How the owner writes and talks. Read before drafting anything the owner will send or post: emails, replies, quotes, posts, proposals. Also use when the owner says "make it sound like me" or "in my voice".
+---
+
 # voice
 
 **Use when:** anything is drafted for the owner to send or post: emails, replies, quotes, posts,
