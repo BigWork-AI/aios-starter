@@ -2,6 +2,12 @@
 
 Plain English, newest on top. `/upgrade --check` shows the owner the entry for the version on offer.
 
+## 0.3.4
+- Your voice is your first skill. The brain builds it from a few real samples of you writing and
+  talking (emails to customers and friends, a meeting where you talk, a blog post), or starts from
+  a voice guide you already have and sharpens it. It tests it on a real draft with you, and every
+  draft after that sounds like you.
+
 ## 0.3.3
 - PDFs are read and checked like every other file. Price lists, quotes and invoices no longer
   wait for you to vouch for them; only a photo or scan of paper is left for your yes.

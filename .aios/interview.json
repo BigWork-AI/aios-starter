@@ -107,13 +107,36 @@
       ]
     },
     {
+      "id": "voice",
+      "title": "Your voice, your first skill",
+      "say": "Now your voice, so everything I draft sounds like you and not like a robot. I build it from a few real samples of you writing and talking, and it becomes your first skill: every email, quote and post I draft uses it. Already got a voice guide or saved voice instructions from ChatGPT or Claude? Paste it or drop it in. I'll start from it and sharpen it with your real samples.",
+      "asks": [
+        "A few emails you wrote yourself: two or three to customers, and one or two to a colleague or a friend, so I hear both sides of you. Point me at them in your connected email, or drag them in.",
+        "Something where you talk: a recorded meeting in your meeting recorder, or notes or a transcript from a Zoom call where you did a lot of the talking. Only your own words get used.",
+        "Anything longer you wrote: a blog post, a newsletter, a LinkedIn post, your About page.",
+        "A voice guide or voice instructions you already use, if you have one."
+      ],
+      "rules": [
+        "Use what the gather and the accounts already brought in first (sent email, the owner's lines in this business's meetings, posts), then ask only for the kinds of sample still missing. Five written and one or two spoken is plenty; take what they have.",
+        "From meetings, use only the owner's own lines, and only from meetings about this business.",
+        "Samples written to friends or colleagues teach style only: never file their content, and quote at most a few words.",
+        "With an existing voice guide: keep what the samples confirm, flag in one line anything the samples contradict, and add what it is missing (openings, sign-offs, saying no, spoken habits).",
+        "Write the result to skills/voice.md from .aios/templates/voice.md, with a row per sample in 'Where this came from'. Then read the voice back in four or five plain lines.",
+        "Test it straight away: draft one real message from the follow-up list in this voice. Ask 'Does this sound like you? What would you change?' Fix skills/voice.md once from the answer and write the date and the correction under 'Checked with the owner'."
+      ],
+      "writes": [
+        "skills/voice.md",
+        "skills/README.md",
+        "memory/onboarding.json#voice"
+      ]
+    },
+    {
       "id": "identity",
       "title": "Who you are",
       "say": "Now just the stuff your website, files and accounts didn't tell me. Anything I found, I'll read back to you as a question.",
       "questions": [
         "In one or two sentences, what does %%COMPANY%% do, and for whom?",
-        "Who runs it, and who else works in it? Names and what each person owns.",
-        "How do you want the brain to talk when it drafts for you: casual, warm, direct, formal? Give me one line you would actually say to a customer."
+        "Who runs it, and who else works in it? Names and what each person owns."
       ],
       "writes": [
         "company/identity.md",
@@ -177,8 +200,8 @@
     },
     {
       "id": "skills",
-      "title": "Your first three skills",
-      "say": "You told me three things you wish you didn't have to do. I've set each one up as a job I can do for you, named the way you said it. Pick one and we'll run it right now on something real.",
+      "title": "Your next three skills",
+      "say": "Your voice is skill number one. You also told me three things you wish you didn't have to do. I've set each one up as a job I can do for you, in your voice, named the way you said it. Pick one and we'll run it right now on something real.",
       "writes": [
         "skills/"
       ]

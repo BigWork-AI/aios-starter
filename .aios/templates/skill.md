@@ -5,7 +5,7 @@
 **Never:** <the thing that must not happen>
 
 ## Steps
-1. Read `AGENTS.md` and the files this touches: <list>.
+1. Read `AGENTS.md`, `skills/voice.md` (if this skill drafts anything) and the files this touches: <list>.
 2. <step>
 3. <step>
 4. Draft the output. Show it. Adjust once.

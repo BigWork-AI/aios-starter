@@ -54,6 +54,9 @@ rather than guess.
 describe the state of a client, deal or job from the files alone; name the evidence or say it is
 unverified.
 
+**Sound like the owner.** Anything drafted for the owner to send or post follows `skills/voice.md`
+once it exists. Until then, say that the draft is not yet in their voice.
+
 **Plain English.** Write for the owner, not for a specialist. Short answers: the point, why it
 matters, the risk, the next step. No jargon, no internal codes, no file paths in prose unless the
 owner has to open the file.
