@@ -92,11 +92,21 @@ This comes straight after the website (or straight after the hello when there is
 before the first job. Say the privacy line from the spec first, word for word, and wait for a yes.
 Do not ask for the website again. Then:
 
-- **Documents: one folder, not file by file.** The folder is `documents_folder` in `aios.yml` (the
-  installer made it). If that line is missing (a brain installed before this step existed), make
-  `<slug>-documents` in the same place as `private_folder`, never inside the brain or the private
-  folder, and add the line. Say the folder's full address and offer to open it in Finder (`open <folder>`
-  on a Mac, `explorer <folder>` on Windows). Say the room's ask. Wait until the owner says it is done.
+- **Documents: the owner drags files or folders into the chat.** Do not send them hunting through
+  Finder. Say the room's ask: the privacy check first, then "drag your files or folders into this
+  chat, or click the + under the message box and choose them, and hit Enter". Take everything they
+  send, as many rounds as they like. Copy each attached file or folder into `documents_folder`
+  from `aios.yml` with a plain copy command (`cp -R "<path>" "<documents folder>"/`), then say
+  "Copied into your documents folder. Now my checker goes through it." If `documents_folder` is
+  missing (a brain installed before this step existed), make `<slug>-documents` in the same place
+  as `private_folder`, never inside the brain or the private folder, and add the line.
+- **An attached file may already be in front of you before the checker runs.** That is fine for
+  reading along, but nothing from any file is written into the brain until the checker has passed
+  it. If the checker leaves a file out, write nothing from it, even what you already saw, and never
+  repeat a password, card or bank number back in the chat; name the file and the reason in general
+  terms, as the checker does.
+- Offering `open <documents folder>` in Finder is a fallback only, for someone who would rather
+  drop files there themselves.
 - **Walk the owner through the privacy check before they fill it, for every file, not only PDFs.**
   Say the ask's `privacy_check` line slowly, item by item, and give one example that fits their
   business ("a quote with the customer's card number written on it", "a staff list with home
@@ -104,7 +114,7 @@ Do not ask for the website again. Then:
   passwords and card or bank numbers in text and Word files, but not pay, ID numbers or personal
   details, and it cannot look inside most PDFs, so the owner is the main check. Offer to wait
   while they look.
-- When they say done, ask once: "Have you checked each file for those private details?" If not,
+- Before they drag their files in, ask once: "Have you checked each file for those private details?" If not,
   wait, or run only on what they have checked.
 - **Never open that folder yourself.** Run
   `python3 .aios/tools/gather.py <documents folder> --label documents`. It screens every file for

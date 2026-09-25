@@ -26,6 +26,8 @@ passwords and card or bank numbers *before* anything is read, copies only the cl
 `inbox/`, and names (never quotes) what it left behind. Read only what it kept. A file it could
 not screen is read only after the owner has heard its name and said yes to it (one yes may cover a
 list the owner has just heard read out), and is read where it is: never copied into the brain.
+Files or folders the owner attaches in the chat are copied into the documents folder and go
+through the same check; nothing from them is written here until it passes, even if you saw it.
 
 **Act within the owner's permissions.** Inside this brain, write freely. Outside it (send, post,
 book, accept, change anything in a connected account) act without asking only when a line in

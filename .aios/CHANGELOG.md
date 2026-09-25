@@ -2,6 +2,13 @@
 
 Plain English, newest on top. `/upgrade --check` shows the owner the entry for the version on offer.
 
+## 0.3.1
+- The first session sounds like a person now: warmer, shorter, straight to the point. With no
+  website it says it will start with your files, not ask you instead.
+- Adding your files is one move: drag files or folders into the chat (or pick them with the +)
+  and hit Enter, as much as you've got. The brain copies them into your documents folder, checks
+  them, then sorts them.
+
 ## 0.3.0
 - Your files come before the first job: after your website (or straight away if you have none),
   the brain reads your documents folder, so the first job uses your real material instead of
