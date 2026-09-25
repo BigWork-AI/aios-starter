@@ -5,7 +5,7 @@
   "rules": [
     "One question at a time. Wait for the answer before asking the next.",
     "Write each answer to its file immediately with source=owner, date=today, status=confirmed, and say where it went in plain words.",
-    "When the website already answered a question, do not ask it cold: read the website's answer back as a question ('Your site says X. Still right?'). Ask the gaps in full.",
+    "Questions fill holes; they are not how facts get in. Before every question, look for rows that already answer it (from the website, the web, the documents, email, Drive, calendar or meetings). If one does, do not ask it cold: read it back as a question ('Your quotes say X. Still right?'). Ask in full only what nothing answered, and skip a question when the owner has already confirmed its answer.",
     "Update memory/onboarding.json after every section so a dropped session resumes at the same place.",
     "If the owner hesitates or says 'skip', mark the section skipped and move on. Never push.",
     "Never claim to know anything that is not written to a file with a status.",
@@ -15,7 +15,7 @@
     {
       "id": "welcome",
       "title": "Hello",
-      "say": "I am your BigWork AI-OS. I know nothing about %%COMPANY%% yet. Over the next 20 to 30 minutes I will ask you about the business and show you where things live. Everything you tell me is written to plain files you own. You can stop at any point and pick up later. Talk, do not type: click the microphone in Claude's message box and just speak. Rambling is fine: I sort it out. Ready?",
+      "say": "I am your BigWork AI-OS. I know nothing about %%COMPANY%% yet. First I will read what you already have: your website, then the documents and accounts you choose to share. Then I will only ask about what is still missing. Everything goes into plain files you own. You can stop at any point and pick up later. Talk, do not type: click the microphone in Claude's message box and just speak. Rambling is fine: I sort it out. Ready?",
       "writes": []
     },
     {
@@ -47,15 +47,68 @@
         "Write the draft in the voice the website uses (or the owner's spoken words) until the owner's own voice is learned, and say so in one line.",
         "Draft only. Save it to inbox/review/ and say where. Nothing is sent or published."
       ],
-      "then": "Show the finished draft. Ask one question: 'Would you use this?' Write the answer to memory/onboarding.json#first_job. Then go on to the questions, which are now only the gaps.",
+      "then": "Show the finished draft. Ask one question: 'Would you use this?' Write the answer to memory/onboarding.json#first_job. Then go on to what stays out, and then the owner's documents and accounts, before any question.",
       "writes": [
         "inbox/review/",
         "memory/onboarding.json#first_job"
       ]
     },
     {
+      "id": "privacy",
+      "title": "What stays out",
+      "say": "I have read your website. Before I pull anything else in, here is what I will and will not take. I will read what you put in your documents folder and what you point me at in the accounts you connect: a price list, the emails and folders you choose, your calendar, meeting notes, a chat export. I will not read your bank, payroll, contracts you have not shown me, or anything personal. Anything like that goes in the private folder outside this brain, which I never open. If I see something that looks like a password or card number I will stop and ask.",
+      "questions": [
+        "Is there anything else that must never go in here, including anything I took from your website? Say it now and I will write the rule, and remove it if I already saved it."
+      ],
+      "writes": [
+        "company/access.md"
+      ]
+    },
+    {
+      "id": "uploads",
+      "title": "Fill the rooms",
+      "say": "Now your documents. I do not need you to find each file for me: I made one folder for them, and I will read what you put in it.",
+      "asks": [
+        {
+          "room": "Documents",
+          "ask": "Put every document or PDF you want me to know about into your documents folder: price lists, brochures, proposals and quotes, how-we-do-it notes, meeting notes, a ChatGPT or Claude export. Copies are fine; the originals stay where they are. Before you add any file (PDF, Word, spreadsheet, notes), open it and check it has none of these: bank or card numbers, account or routing numbers, passwords or logins, pay or salary figures, tax or ID numbers, staff home addresses or personal phone numbers, health details. If one does, delete that part or black it out and save a new copy, or leave the file out. I catch some of this in plain text and Word files, but not all of it, and I cannot look inside most PDFs at all, so you are the main check. Tell me when it is done.",
+          "folder": "documents_folder in aios.yml",
+          "status": "imported",
+          "privacy_check": "Before you add any file (PDF, Word, spreadsheet, notes), open it and check it has none of these: bank or card numbers, account or routing numbers, passwords or logins, pay or salary figures, tax or ID numbers, staff home addresses or personal phone numbers, health details. If one does, delete that part or black it out and save a new copy, or leave the file out. I catch some of this in plain text and Word files, but not all of it, and I cannot look inside most PDFs at all, so you are the main check."
+        }
+      ],
+      "writes": [
+        "company/services.md",
+        "company/identity.md",
+        "clients/",
+        "memory/imported/"
+      ]
+    },
+    {
+      "id": "connectors",
+      "title": "Connect your accounts",
+      "say": "Now the places your business lives online. Each one is your choice. Be clear on one thing: when you connect email, Drive or calendar, Claude is given the ability to read and to send or change things there; there is no read-only setting. What protects you is two things: my rule here is to read only, and never send, change or delete anything without your yes, and Claude itself asks you before every send or change. Connect them in Claude's settings under Connectors, and I will walk you through each click.",
+      "questions": [
+        "GitHub: is your private online copy connected yet? If not, we do it now: it is the backup and what links your phone. (yes, or let's do it)",
+        "Email: connect it? Then name the customers or threads I should read, or say 'the last few weeks with customers'. I summarise; I never copy a whole email in. (yes or no)",
+        "Google Drive or OneDrive: connect it? Then name the folders I should read. I cannot screen those files for private numbers first, so I read out every file name and read only the ones you say yes to. (yes or no)",
+        "Calendar: connect it? I read the last month and the next two weeks: who you meet and how often. (yes or no)",
+        "Meeting recorder: which one, if any? Connect it and I read the summaries of your last few meetings with customers. (yes or no)"
+      ],
+      "then": "After each yes, read only what the owner chose, write what you find as source=<account> <item>, status=imported, seed a client folder for each business that appears, and cross off anything it answers in memory/onboarding.json#gaps. Then say in two or three plain sentences what you found and what is still missing. The questions that follow are only those gaps.",
+      "writes": [
+        "company/tools.md",
+        "company/services.md",
+        "company/customers.md",
+        "clients/",
+        "memory/imported/",
+        "memory/onboarding.json#gaps"
+      ]
+    },
+    {
       "id": "identity",
       "title": "Who you are",
+      "say": "Now only what your website, documents and accounts did not tell me. Anything I found, I read back to you as a question.",
       "questions": [
         "In one or two sentences, what does %%COMPANY%% do, and for whom?",
         "Who runs it, and who else works in it? Names and what each person owns.",
@@ -111,60 +164,6 @@
       ],
       "writes": [
         "memory/onboarding.json#pain"
-      ]
-    },
-    {
-      "id": "privacy",
-      "title": "What stays out",
-      "say": "I have read your website. Before I pull anything else in, here is what I will and will not take. I will read what you put in your documents folder and what you point me at: a price list, a few emails you choose, meeting notes, a chat export. I will not read your bank, payroll, contracts you have not shown me, or anything personal. Anything like that goes in the private folder outside this brain, which I never open. If I see something that looks like a password or card number I will stop and ask.",
-      "questions": [
-        "Is there anything else that must never go in here, including anything I took from your website? Say it now and I will write the rule, and remove it if I already saved it."
-      ],
-      "writes": [
-        "company/access.md"
-      ]
-    },
-    {
-      "id": "uploads",
-      "title": "Fill the rooms",
-      "say": "Now your documents. I do not need you to find each file for me: I made one folder for them, and I will read what you put in it.",
-      "asks": [
-        {
-          "room": "Documents",
-          "ask": "Put every document or PDF you want me to know about into your documents folder: price lists, brochures, proposals and quotes, how-we-do-it notes, meeting notes, a ChatGPT or Claude export. Copies are fine; the originals stay where they are. Before you add any file (PDF, Word, spreadsheet, notes), open it and check it has none of these: bank or card numbers, account or routing numbers, passwords or logins, pay or salary figures, tax or ID numbers, staff home addresses or personal phone numbers, health details. If one does, delete that part or black it out and save a new copy, or leave the file out. I catch some of this in plain text and Word files, but not all of it, and I cannot look inside most PDFs at all, so you are the main check. Tell me when it is done.",
-          "folder": "documents_folder in aios.yml",
-          "status": "imported",
-          "privacy_check": "Before you add any file (PDF, Word, spreadsheet, notes), open it and check it has none of these: bank or card numbers, account or routing numbers, passwords or logins, pay or salary figures, tax or ID numbers, staff home addresses or personal phone numbers, health details. If one does, delete that part or black it out and save a new copy, or leave the file out. I catch some of this in plain text and Word files, but not all of it, and I cannot look inside most PDFs at all, so you are the main check."
-        },
-        {
-          "room": "Customers",
-          "ask": "Three to ten recent customer emails you choose, or say 'connect email' and pick them there.",
-          "status": "imported"
-        },
-        {
-          "room": "Calendar",
-          "ask": "Say 'connect calendar' and I will read who you meet and how often.",
-          "status": "imported"
-        }
-      ],
-      "writes": [
-        "company/services.md",
-        "company/identity.md",
-        "clients/",
-        "memory/imported/"
-      ]
-    },
-    {
-      "id": "connectors",
-      "title": "Connect",
-      "questions": [
-        "GitHub: is your private online copy connected yet? If not, we do it now: it is the backup and what links your phone. (yes, or let's do it)",
-        "Email: connect it? (yes or no)",
-        "Calendar: connect it? (yes or no)",
-        "Meeting recorder: which one, if any, and connect it? (yes or no)"
-      ],
-      "writes": [
-        "company/tools.md"
       ]
     },
     {
