@@ -12,14 +12,15 @@ run it. The brain leads; the owner answers; a BigWork person may be sitting alon
 
 ## The order: read first, ask last
 
-The website and the web, one real job, then what stays out, then the owner's documents folder,
-then the accounts they choose to connect. Only then the questions, and only about what all of that
+The website and the web, then what stays out and the owner's documents folder, then one real job
+built on all of that, then the accounts they choose to connect. Only then the questions, and only about what all of that
 left open. The questions fill holes in the data; they are not the main way facts get in.
 
 ## The website, before any question
 
 Straight after the hello, ask for the website address. If there is none, mark the section skipped and
-start asking. Otherwise say the section's consent line and wait for a yes, then:
+go straight to what stays out and the documents folder: with no website, the owner's files are the
+best place to start, and asking comes last. Otherwise say the section's consent line and wait for a yes, then:
 
 - Read exactly what the consent line names: the home page, then the pages it links to on the
   same address about services, prices, about, team, locations, FAQs, reviews and contact; fifteen
@@ -39,19 +40,21 @@ start asking. Otherwise say the section's consent line and wait for a yes, then:
   Write facts as `source: web <page address>`, `status: imported`. A web fact never overwrites a
   website fact; when they disagree, keep both and add it to `gaps` (an old address on a listing is
   exactly the kind of thing the owner wants to hear about).
-- End with: "So I will only ask you about those, and check the rest with you as we go."
+- End with: "So I will only ask you about those, and check the rest with you as we go." Then
+  go to what stays out and the documents folder (the uploads section below), before the first job.
 
 ## The first job, before any question
 
-Straight after the website and web read, do one real job, so the owner sees the brain work inside
+Straight after the documents folder is read, do one real job, so the owner sees the brain work inside
 the first fifteen minutes. The spec's `first_job` section has the rules; the point of them:
 
 - **Agree one job, together.** Say the `first_job` line: one useful job, finished in a few
   minutes, with three examples (a follow-up to a quiet customer, this week's blog post, the price
-  list as one clean page), "or tell me yours". Suggest from what was just read. If the owner names
+  list as one clean page), "or tell me yours". Suggest from what was just read: the website, the web and the documents. If the owner names
   their own and it is right-sized, do it; if not, say why in one line and offer the smaller version.
-- **No website?** That is fine. Ask two quick questions (what do you sell, and one customer you
-  are dealing with right now) and suggest from those.
+- **No website and no documents?** That is fine. Ask two quick questions (what do you sell, and
+  one customer you are dealing with right now) and suggest from those. If either one gave enough,
+  ask nothing.
 - **Right-sized** means finished in under five minutes as one draft the owner can use today. Good:
   a follow-up to a customer who asked for a quote and went quiet; this week's short blog or social
   post from one service; the price list as one clear page; a reply to the question customers ask
@@ -60,8 +63,8 @@ the first fifteen minutes. The spec's `first_job` section has the rules; the poi
   account, anything sent or posted. No invoicing, no chasing every client, no campaigns.
 - Write in the voice the website uses and say so; the owner's own voice comes later.
 - Save the draft to `inbox/review/`, say where, and ask "Would you use this?" Write the answer to
-  `first_job` in `memory/onboarding.json`. Then go straight to what stays out, the documents and
-the accounts. No question about the company yet.
+  `first_job` in `memory/onboarding.json`. Then go straight to connecting the accounts. No question
+about the company yet.
 
 
 ## Running a section
@@ -85,8 +88,9 @@ the accounts. No question about the company yet.
 
 ## The uploads section
 
-Say the privacy line from the spec first, word for word, and wait for a yes. The website was read
-at the start; do not ask for it again. Then:
+This comes straight after the website (or straight after the hello when there is no website),
+before the first job. Say the privacy line from the spec first, word for word, and wait for a yes.
+Do not ask for the website again. Then:
 
 - **Documents: one folder, not file by file.** The folder is `documents_folder` in `aios.yml` (the
   installer made it). If that line is missing (a brain installed before this step existed), make
@@ -133,10 +137,11 @@ at the start; do not ask for it again. Then:
 
 ## The connectors section
 
-Straight after the documents. Say the section's line word for word: each account is the owner's
+Straight after the first job. Say the section's line word for word: each account is the owner's
 choice, and the connection itself can send and change things (there is no read-only setting on
-most plans); the protection is this brain's read-only rule plus Claude's own ask before every send
-or change. Never call a connection read-only. Only read; never send, change or delete. The owner adds connectors in Claude's settings under Connectors; walk them through the
+most plans); what the brain actually does there is set by the owner on `company/permissions.md`,
+and Claude itself also asks before a send or change in a live chat. Never call a connection read-only. During the first session, only read: the
+permissions page starts empty, and it grows later, one yes at a time. The owner adds connectors in Claude's settings under Connectors; walk them through the
 clicks, and if a connector is not offered on their plan or app, say so and move on. Check what is
 connected before calling anything unavailable. Then, for each yes:
 

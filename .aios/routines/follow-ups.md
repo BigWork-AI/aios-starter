@@ -10,7 +10,15 @@ and leaves the drafts in `inbox/review/`. The owner sends, changes or drops each
 Inside a scheduled routine on a Pro or Max plan, connector writes (sending a mail, changing a
 calendar event) happen **without an approval prompt**. A playbook that says "never send" is a
 request, not a control. So this routine gets one connection only: the brain's own repository.
-It cannot send because it has no way to. Connector-fed routines are for Team or Enterprise plans
+It cannot send because it has no way to. That is the right start: the owner's permissions page
+(`company/permissions.md`) is empty on day one.
+
+**When the owner wants it to send on its own.** Only after a line on the permissions page allows
+exactly that (for example "send follow-ups to customers who asked for a quote, at most two per
+customer") and marks it "when I am away". Then the routine may be given the email connection, its
+prompt names that one permission line, every send is written to `memory/actions.md`, and the
+receipt counts sends. On Pro and Max nothing stops a routine that goes beyond its line, so keep
+the line narrow and read the action log in the weekly review. Connector-fed routines are for Team or Enterprise plans
 where an admin blocks the write categories, or for a later Anthropic release with read-only
 routine scopes.
 

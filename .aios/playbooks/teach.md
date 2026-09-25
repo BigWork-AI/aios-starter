@@ -6,8 +6,10 @@ Turns a task the owner wishes they did not have to do into a reusable command, w
    good result looks like, what goes wrong, who is involved, which files or tools it touches.
 2. Copy `.aios/templates/skill.md` to `skills/<name>.md`. Name it the way the owner says it
    ("chase-quotes", not "follow-up-automation").
-3. Write the steps in plain English. Every step that drafts something says "draft"; nothing in a
-   taught task sends, spends or deletes.
+3. Write the steps in plain English. A step that sends, posts or changes something outside the
+   brain says so, and runs on its own only if `company/permissions.md` allows it; otherwise it
+   drafts and asks. Nothing in a taught task spends money or deletes. If the owner wants the task
+   to run without asking, read back the permission line (what, where, limits) and add it on a yes.
 4. Add a matching one-line adapter at `.claude/commands/<name>.md` pointing to the skill file.
 5. Run it once on real material with the owner watching. Fix what the run shows. Save.
 6. Record it in `skills/README.md` with one line on when to use it.

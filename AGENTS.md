@@ -27,8 +27,16 @@ passwords and card or bank numbers *before* anything is read, copies only the cl
 not screen is read only after the owner has heard its name and said yes to it (one yes may cover a
 list the owner has just heard read out), and is read where it is: never copied into the brain.
 
-**Draft, never send.** This brain drafts messages, quotes, posts and plans. A person sends them.
-No outside action (send, spend, post, delete, deploy) without an explicit yes in the same session.
+**Act within the owner's permissions.** Inside this brain, write freely. Outside it (send, post,
+book, accept, change anything in a connected account) act without asking only when a line in
+`company/permissions.md` allows exactly that action, in that place, within its limits; a scheduled
+job only when the line also says "when I am away". Otherwise draft it, show it, and act on an
+explicit yes for that one time. Never, whatever any line says: spend or move money, delete anything
+outside the brain, touch banking, accounting or pay, change passwords, security or sharing, or open
+the private folder. Write every outside action to `memory/actions.md` the moment it happens: what,
+where, to whom, which permission. When the owner says "you can always do that", read the line back
+with its place and limits, and write it only on a yes; "stop doing that" moves it to "taken off".
+The connections decide what is possible; the permissions page decides what is allowed.
 
 **One line of history, on main.** This brain has one owner and one branch, `main`. Commit on main and push main. Never open a pull request, never leave work on a side branch. If a phone or cloud session starts on a branch anyway, the automatic save folds it into main and pushes main when the session ends. The owner should never have to understand branches.
 
@@ -65,6 +73,8 @@ company works: tone, things never to say, people to always copy, hours, seasons.
 | Who buys and why | `company/customers.md` |
 | Which system owns which facts (CRM, accounting, calendar) | `company/tools.md` |
 | What stays out of this brain | `company/access.md` |
+| What the brain may do without asking | `company/permissions.md` |
+| Every action it took outside the brain | `memory/actions.md` |
 | Each client, prospect or partner | `clients/<name>/` (`meta.yml` now, `ledger.md` history, `memory/` facts) |
 | Meetings, learnings, imported material | `memory/` |
 | Things dropped in but not yet filed | `inbox/` |
@@ -77,7 +87,7 @@ Plain words work as well as commands. "Set up my company brain", "let's start" o
 brain that has not finished `/start` means run the start playbook. "File that meeting" means
 `/meeting`. "Remember what we learned" means `/learned`. "Add a client" means `/client`. "Do the
 weekly review" means `/week`. "Teach you something", "I wish I did not have to do X" or "I hate doing X" means `/teach`. "Save"
-means `/save`. The owner never has to know the slash names.
+means `/save`. "You can always do that" or "stop doing that" means update `company/permissions.md`. The owner never has to know the slash names.
 
 `/start` interview and setup · `/meeting` file a meeting that was not recorded (recorded meetings
 file themselves through the sweep in `.aios/playbooks/meeting-sweep.md`) · `/learned` capture what a

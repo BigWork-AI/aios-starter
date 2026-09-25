@@ -31,7 +31,8 @@ files you own, with an AI that reads them and does the work.
 
 1. **Never paste a password, card number or bank detail in here.** The brain will stop you, but do
    not test it. Private matters go in your private folder, which the brain never opens.
-2. **The brain drafts, you send.** Nothing goes out to a customer unless you send it.
+2. **You decide what it may do.** On day one it drafts and you send. When you trust it with a job, say
+   "you can always do that" and it goes on your permissions page; every action it takes is logged.
 3. **Close chats with `/learned`.** Saving is automatic, but the lessons in a conversation are not
    written down until you ask. That is what makes next month's brain smarter than this month's.
 

@@ -21,7 +21,7 @@ right files.
   it read: services, prices, customers, who does what.
 - **Files your meetings by itself.** Recorded meetings are read and filed to the right client or
   operations folder, with promises pulled out and dated. You confirm; it does not guess.
-- **Runs three skills** set up from the three things you said you wish you did not have to do. They draft; you approve.
+- **Runs three skills** set up from the three things you said you wish you did not have to do. They draft and you approve, until you tell one it may go ahead on its own.
 - **Works from your laptop or your phone.** Saving happens on its own when a session ends, so a
   change on one shows on the other next time you open it.
 
