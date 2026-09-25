@@ -11,6 +11,8 @@ same secret scan as a save over every file it can read as text, and then:
                 owner's private folder, so the owner knows what stayed behind and why
   unscreened    files the tool cannot read as text (PDFs, images, unknown types): NOT copied,
                 NOT read; named so the owner can approve them, all at once or one by one
+  skipped       shortcuts (symlinks) and hidden files: NOT followed, NOT copied, NOT read; named. A
+                shortcut can point anywhere, including the private folder, so it is never opened.
 
 A file already looked at in an earlier run, and unchanged since, is skipped and only counted, so the
 owner can keep adding to the same folder and say "read my new documents". The folder's own note to
@@ -72,12 +74,34 @@ def readable_text(path: Path):
     return None
 
 
+def walk(folder: Path):
+    """Yield (path, rel, kind) for every entry, never stepping through a shortcut."""
+    stack = [folder]
+    while stack:
+        current = stack.pop()
+        for path in sorted(current.iterdir()):
+            rel = path.relative_to(folder)
+            if path.name in SKIP_DIRS:
+                continue
+            if path.is_symlink():
+                yield path, rel, 'shortcut'
+            elif path.name.startswith('.'):
+                if path.name not in ('.DS_Store', '.localized'):
+                    yield path, rel, 'hidden'
+            elif path.is_dir():
+                stack.append(path)
+            elif path.is_file():
+                yield path, rel, 'file'
+
+
 def gather(folder: Path, label: str, seen: dict) -> dict:
-    kept, screened, unscreened, earlier = [], [], [], []
+    kept, screened, unscreened, earlier, skipped = [], [], [], [], []
     dest = ROOT / 'inbox' / label
-    for path in sorted(p for p in folder.rglob('*') if p.is_file()):
-        rel = path.relative_to(folder)
-        if any(part in SKIP_DIRS or part.startswith('.') for part in rel.parts) or str(rel) == FOLDER_NOTE:
+    for path, rel, kind in sorted(walk(folder), key=lambda item: str(item[1])):
+        if str(rel) == FOLDER_NOTE:
+            continue
+        if kind != 'file':
+            skipped.append(str(rel))
             continue
         stamp = f'{path.stat().st_size}:{int(path.stat().st_mtime)}'
         if seen.get(str(rel)) == stamp:
@@ -91,7 +115,7 @@ def gather(folder: Path, label: str, seen: dict) -> dict:
         problems = scan_text(text, str(rel))
         if problems:
             # keep the reason, never the value: "looks like a card number"
-            reason = re.sub(r'^.*looks like a (.+?)\..*$', r'\1', problems[0])
+            reason = re.sub(r'^.*looks like (an? .+?)\. Remove it.*$', r'\1', problems[0])
             screened.append({'file': str(rel), 'reason': reason})
             continue
         target = dest / rel
@@ -99,7 +123,7 @@ def gather(folder: Path, label: str, seen: dict) -> dict:
         shutil.copy2(path, target)
         kept.append(str(rel))
         seen[str(rel)] = stamp
-    return {'kept': kept, 'screened_out': screened, 'unscreened': unscreened, 'looked_at_before': earlier}
+    return {'kept': kept, 'screened_out': screened, 'unscreened': unscreened, 'skipped': skipped, 'looked_at_before': earlier}
 
 
 def main(argv: list) -> int:
@@ -139,7 +163,7 @@ def main(argv: list) -> int:
             f.write(f'\n## {today}: screened out of "{label}" ({folder})\n\n')
             f.write('These files were not copied into the brain and were not read by the AI. Each one looked like it held something that must not go in the brain. They are still where they were.\n\n')
             for item in result['screened_out']:
-                f.write(f"- {item['file']}: looks like a {item['reason']}\n")
+                f.write(f"- {item['file']}: looks like {item['reason']}\n")
 
     k, s_, u = len(result['kept']), len(result['screened_out']), len(result['unscreened'])
     print(f'Looked at "{folder.name}".')
@@ -152,6 +176,9 @@ def main(argv: list) -> int:
     if u:
         names = ', '.join(result['unscreened'])
         print(f'Could not screen {u} file(s), so I did not copy or read them: {names}. Say "read them all" or name the ones you want read; I read those where they are and never copy them into the brain.')
+    if result['skipped']:
+        names = ', '.join(result['skipped'])
+        print(f"Passed over {len(result['skipped'])} shortcut(s) or hidden file(s) without opening them: {names}. A shortcut can point at your private folder, so I never follow one. If you want one of these read, put a real copy in the folder instead.")
     print(f'Receipt: memory/receipts/gather-{label}-{now:%Y-%m-%d-%H%M%S}.json')
     return 0
 

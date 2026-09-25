@@ -30,14 +30,26 @@ if [ -z "$COMPANY" ] && (: < "$TTY") 2>/dev/null; then
   printf 'What is your business called? ' >&2
   IFS= read -r COMPANY < "$TTY" || COMPANY=""
 fi
-if [ -z "$SLUG" ]; then
-  SLUG=$(printf '%s' "$COMPANY" | tr '[:upper:]' '[:lower:]' | sed 's/&/and/g; s/[^a-z0-9][^a-z0-9]*/-/g; s/^-//; s/-$//')
+# Python is really installed (on a Mac without Apple's command line tools, /usr/bin/python3 is a
+# placeholder that opens an install window; the machine check below handles that, not this step).
+real_python() {
+  command -v python3 >/dev/null 2>&1 || return 1
+  [ "$(uname -s 2>/dev/null)" != Darwin ] || [ "$(command -v python3)" != /usr/bin/python3 ] || xcode-select -p >/dev/null 2>&1
+}
+if [ -z "$SLUG" ] && [ -n "$COMPANY" ]; then
+  # Accents become plain letters (Café -> cafe) where Python is already here; quotes and apostrophes
+  # vanish (O'Brien's -> obriens) instead of splitting the name.
+  SLUG=$(printf '%s' "$COMPANY" \
+    | { real_python && python3 -c 'import sys, unicodedata; sys.stdout.write(unicodedata.normalize("NFKD", sys.stdin.buffer.read().decode("utf-8", "ignore")).encode("ascii", "ignore").decode())' 2>/dev/null || cat; } \
+    | tr '[:upper:]' '[:lower:]' | sed "s/[\"']//g; s/&/and/g; s/[^a-z0-9][^a-z0-9]*/-/g; s/^-//; s/-\$//")
 fi
 if [ -z "$COMPANY" ] || [ -z "$SLUG" ]; then
   echo "usage: curl -fsSL https://raw.githubusercontent.com/BigWork-AI/aios-starter/main/install.sh | sh -s -- \"Company Name\" company-slug"; exit 2
 fi
 # The name goes into files through sed, where & and | have special meanings.
 COMPANY_SED=$(printf '%s' "$COMPANY" | sed 's/[&|\\]/\\&/g')
+# In aios.yml the name sits inside double quotes, so its own quotes and backslashes are escaped.
+COMPANY_YAML=$(printf '%s' "$COMPANY" | sed 's/[\\"]/\\&/g')
 # AIOS_HERE=1: build the brain in the folder we are standing in (the owner chose it in Claude), with
 # the private and documents folders beside it, so the same Claude session carries straight on.
 if [ "${AIOS_HERE:-0}" = 1 ]; then
@@ -128,6 +140,7 @@ else
   need tar || { echo "tar is missing. Install it and run this again."; exit 1; }
   KIT_URL="${AIOS_KIT_URL:-https://github.com/${AIOS_REPO:-BigWork-AI/aios-starter}/archive/refs/heads/main.tar.gz}"
   TMP=$(mktemp -d)
+  trap 'rm -rf "$TMP"' EXIT
   echo "Fetching the kit from $KIT_URL"
   if ! curl -fsSL "$KIT_URL" -o "$TMP/kit.tar.gz"; then
     code=$(curl -s -o /dev/null -w '%{http_code}' "$KIT_URL" 2>/dev/null || echo 000)
@@ -138,7 +151,11 @@ else
     esac
     exit 1
   fi
-  mkdir -p "$TMP/kit" && tar -xzf "$TMP/kit.tar.gz" -C "$TMP/kit"
+  mkdir -p "$TMP/kit"
+  if ! tar -xzf "$TMP/kit.tar.gz" -C "$TMP/kit" 2>/dev/null; then
+    echo "The kit download was damaged, so nothing was installed. Paste the same line again; if it happens twice, tell BigWork."
+    exit 1
+  fi
   SRC=$(find "$TMP/kit" -maxdepth 3 -name .aios -type d | head -1)
   [ -n "$SRC" ] || { echo "The downloaded kit is not a BigWork AI-OS starter (no .aios folder)."; exit 1; }
   SRC=$(dirname "$SRC")
@@ -157,7 +174,7 @@ for f in AGENTS.md README.md CLAUDE.md company/identity.md company/access.md gui
 done
 if grep -q '%%COMPANY%%' aios.yml 2>/dev/null || [ ! -f aios.yml ]; then
   cat > aios.yml <<EOF
-company: "$COMPANY"
+company: "$COMPANY_YAML"
 slug: $SLUG
 engine: $ENGINE
 harness: claude-code
@@ -220,9 +237,17 @@ git -c user.name="${GIT_AUTHOR_NAME:-$COMPANY}" -c user.email="${GIT_AUTHOR_EMAI
 if ! git remote get-url origin >/dev/null 2>&1; then
   if [ "$GH" = 1 ] && gh auth status >/dev/null 2>&1; then
     say "Creating the private GitHub copy"
-    gh repo create "$SLUG-brain" --private --source . --push >/dev/null && echo "Pushed to GitHub (private)." \
-      || echo "Could not create the GitHub copy. The brain works locally; connect GitHub later with: gh repo create $SLUG-brain --private --source . --push"
-    echo "Check two-factor login is on for this GitHub account before the session ends."
+    if gh_out=$(gh repo create "$SLUG-brain" --private --source . --push 2>&1 >/dev/null); then
+      echo "Pushed to GitHub (private)."
+      echo "Check two-factor login is on for this GitHub account before the session ends."
+    else
+      case "$gh_out" in
+        *"already exists"*)
+          echo "Could not create the GitHub copy: this GitHub account already has a project called $SLUG-brain, maybe from an earlier try. Nothing was changed on it. The brain works on this computer; in your setup session we check that project and either connect to it or pick a new name." ;;
+        *)
+          echo "Could not create the GitHub copy. The brain works locally; connect GitHub later with: gh repo create $SLUG-brain --private --source . --push" ;;
+      esac
+    fi
   else
     say "GitHub not connected yet"
     echo "The brain is built and works on this computer. GitHub is the online backup and what links your phone."

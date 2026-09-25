@@ -29,7 +29,12 @@ fetch_kit() {
       [ "$MODE" = "--auto" ] && exit 0
       echo "Could not reach BigWork's shelf ($KIT_URL). Try again later; nothing was changed."; exit 1
     fi
-    mkdir -p "$TMP/kit" && tar -xzf "$TMP/kit.tar.gz" -C "$TMP/kit"
+    mkdir -p "$TMP/kit"
+    if ! tar -xzf "$TMP/kit.tar.gz" -C "$TMP/kit" 2>/dev/null; then
+      rm -rf "$TMP"; receipt "unknown" "damaged-download"
+      [ "$MODE" = "--auto" ] && exit 0
+      echo "The engine download from BigWork's shelf was damaged. Try again later; nothing was changed."; exit 1
+    fi
   fi
   SRC=$(find "$TMP/kit" -maxdepth 3 -name .aios -type d | head -1)
   [ -n "$SRC" ] || { echo "The downloaded kit is not a BigWork AI-OS engine."; rm -rf "$TMP"; exit 1; }
@@ -57,7 +62,23 @@ if [ -n "$(git status --porcelain)" ]; then
 fi
 
 echo "Upgrading engine $CURRENT -> $NEW"
-COMPANY=$(sed -n 's/^company: *"\{0,1\}\([^"]*\)"\{0,1\}$/\1/p' aios.yml | head -1)
+# The name is written quoted with its own quotes escaped; brains installed before 0.3.2 may hold it
+# with bare inner quotes, which is read back whole too.
+COMPANY=$(python3 - <<'PY'
+import json, re, sys
+for line in open('aios.yml', encoding='utf-8'):
+    m = re.match(r'company:\s*(.*?)\s*$', line)
+    if m:
+        value = m.group(1)
+        if value.startswith('"'):
+            try:
+                value = json.loads(value)
+            except ValueError:
+                value = value[1:-1] if value.endswith('"') else value[1:]
+        sys.stdout.buffer.write(value.encode('utf-8'))
+        break
+PY
+)
 PRIVATE=$(sed -n 's/^private_folder: *//p' aios.yml | head -1)
 
 # 1. Engine folder, replaced whole.

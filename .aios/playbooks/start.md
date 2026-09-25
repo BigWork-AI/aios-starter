@@ -96,7 +96,8 @@ Do not ask for the website again. Then:
   Finder. Say the room's ask: the privacy check first, then "drag your files or folders into this
   chat, or click the + under the message box and choose them, and hit Enter". Take everything they
   send, as many rounds as they like. Copy each attached file or folder into `documents_folder`
-  from `aios.yml` with a plain copy command (`cp -R "<path>" "<documents folder>"/`), then say
+  from `aios.yml` with a plain copy command that keeps shortcuts as shortcuts
+  (`cp -RP "<path>" "<documents folder>"/`; the checker passes over shortcuts), then say
   "Copied into your documents folder. Now my checker goes through it." If `documents_folder` is
   missing (a brain installed before this step existed), make `<slug>-documents` in the same place
   as `private_folder`, never inside the brain or the private folder, and add the line.
@@ -111,8 +112,9 @@ Do not ask for the website again. Then:
   Say the ask's `privacy_check` line slowly, item by item, and give one example that fits their
   business ("a quote with the customer's card number written on it", "a staff list with home
   addresses", "a spreadsheet with everyone's pay"). Explain why in one line: the tool catches
-  passwords and card or bank numbers in text and Word files, but not pay, ID numbers or personal
-  details, and it cannot look inside most PDFs, so the owner is the main check. Offer to wait
+  passwords, card and bank numbers and social security numbers in text and Word files, but not
+  pay, other ID numbers or personal details, and it cannot look inside most PDFs, so the owner is
+  the main check. Offer to wait
   while they look.
 - Before they drag their files in, ask once: "Have you checked each file for those private details?" If not,
   wait, or run only on what they have checked.

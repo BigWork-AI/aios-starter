@@ -7,7 +7,8 @@
 
 Exit 0 when clean, 1 with a plain-English list of problems. This is a backstop, not the privacy
 promise: the private folder lives outside the repository and the interview screens material before
-it is read. Patterns here catch the obvious leaks (keys, tokens, cards, private keys, passwords).
+it is read. Patterns here catch the obvious leaks (keys, tokens, cards, private keys, passwords, bank
+account and routing numbers next to a bank word, IBANs, social security numbers).
 """
 import json
 import re
@@ -37,6 +38,12 @@ SECRET_PATTERNS = [
     ('password assignment', re.compile(r'(?i)\b(?:password|passwd|pwd)\s*[:=]\s*\S{6,}')),
     ('bearer token', re.compile(r'(?i)\bbearer\s+[A-Za-z0-9._-]{20,}')),
     ('card number', re.compile(r'\b(?:\d[ -]?){13,19}\b')),
+    # Bank numbers only next to a bank word. A blocked save blocks the whole session, so a bare
+    # "account 10023456" (a customer or supplier account) is left alone.
+    ('bank routing number', re.compile(r'(?i)\b(?:routing|aba)\s*(?:number|no\.?|#)?\s*[:#]?\s*\d{9}\b')),
+    ('bank account number', re.compile(r'(?i)\b(?:bank\s+account|account\s+(?:number|no\.?|#)|acct\.?|a/c)\s*(?:number|no\.?|#)?\s*[:#]?\s*\d{8,17}\b')),
+    ('IBAN', re.compile(r'\b[A-Z]{2}\d{2}(?: ?[A-Z0-9]{4}){3,7}(?: ?[A-Z0-9]{1,3})?\b')),
+    ('social security number', re.compile(r'\b(?!000|666|9\d\d)\d{3}-(?!00)\d{2}-(?!0000)\d{4}\b')),
 ]
 
 
@@ -60,7 +67,8 @@ def scan_text(text: str, name: str) -> list:
                 if not (13 <= len(digits) <= 19 and luhn_ok(digits)):
                     continue
             line = text.count('\n', 0, match.start()) + 1
-            problems.append(f'{name} line {line}: looks like a {label}. Remove it; it never belongs in the brain.')
+            article = 'an' if label[0].lower() in 'aeiou' or label.startswith('IBAN') else 'a'
+            problems.append(f'{name} line {line}: looks like {article} {label}. Remove it; it never belongs in the brain.')
             break
     return problems
 

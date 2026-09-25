@@ -2,6 +2,18 @@
 
 Plain English, newest on top. `/upgrade --check` shows the owner the entry for the version on offer.
 
+## 0.3.2
+- The checker never follows a shortcut. A shortcut in your documents folder can point at your
+  private folder, so the checker passes over shortcuts and hidden files, names them, and reads
+  none of them.
+- The checker now catches bank account and routing numbers (written next to "routing",
+  "bank account" or "account number"), IBANs and social security numbers, as well as cards,
+  passwords and keys. A plain customer or supplier account number is left alone.
+- A business name with quotes or accents installs cleanly: Café becomes cafe in the folder name,
+  and upgrades keep the full name.
+- A damaged download or a GitHub name that is already taken now says so plainly and leaves nothing
+  half-made behind.
+
 ## 0.3.1
 - The first session sounds like a person now: warmer, shorter, straight to the point. With no
   website it says it will start with your files, not ask you instead.
