@@ -2,6 +2,13 @@
 
 Plain English, newest on top. `/upgrade --check` shows the owner the entry for the version on offer.
 
+## 0.3.3
+- PDFs are read and checked like every other file. Price lists, quotes and invoices no longer
+  wait for you to vouch for them; only a photo or scan of paper is left for your yes.
+- Your business numbers are welcome: sales, costs, margins, invoices, what's owed. Spreadsheets full
+  of numbers no longer set off a false card-number alarm. Payroll is your call: the brain asks once.
+  Bank and card numbers, passwords, ID numbers and personal matters still stay out.
+
 ## 0.3.2
 - The checker never follows a shortcut. A shortcut in your documents folder can point at your
   private folder, so the checker passes over shortcuts and hidden files, names them, and reads

@@ -33,14 +33,16 @@ That only happens if chats end with `/learned`.
 
 ## What stays private
 
-- Your bank, payroll, contracts you have not chosen to share, and anything personal go in the
-  private folder at `%%PRIVATE%%`. The brain never opens it.
+- Your business numbers are welcome: sales, costs, margins, invoices. Bank and card numbers,
+  passwords, contracts you have not chosen to share and anything personal go in the private folder
+  at `%%PRIVATE%%`. The brain never opens it. Payroll is your call; it asks.
 - Before it reads anything from outside (your website, emails, files) it tells you what it will read
   and waits for your yes.
-- Documents you want it to know about go in your documents folder at `%%DOCUMENTS%%`. It checks
-  each file for passwords and account numbers before reading, and asks before reading any file it
-  cannot check. That check misses things (pay, ID numbers, staff personal details) and cannot see
-  inside most PDFs, so look through every file yourself before you drop it in.
+- Documents you want it to know about: drag them into the chat, or put them in your documents
+  folder at `%%DOCUMENTS%%`. It checks each file for passwords and account numbers before reading
+  (text, Word, spreadsheets and PDFs), and asks before reading any file it cannot check, such as a
+  photo or scan of paper. That check misses things (some ID numbers, staff personal details), so
+  give every file a quick look before you add it.
 - If something that looks like a password or card number gets pasted in, it stops and refuses to
   save it. That is a backstop, not a promise; do not rely on it.
 - Your words go to the AI provider you use (Claude, from Anthropic) the same way a chat would. Ask

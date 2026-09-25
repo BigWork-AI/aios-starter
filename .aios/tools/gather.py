@@ -9,10 +9,14 @@ same secret scan as a save over every file it can read as text, and then:
   kept          copied into inbox/<label>/ for the AI to read and file
   screened out  NOT copied, NOT read; named (never quoted) in the read-back and in a note in the
                 owner's private folder, so the owner knows what stayed behind and why
-  unscreened    files the tool cannot read as text (PDFs, images, unknown types): NOT copied,
-                NOT read; named so the owner can approve them, all at once or one by one
+  unscreened    files the tool cannot read as text (scanned PDFs, images, unknown types): NOT
+                copied, NOT read; named so the owner can approve them, all at once or one by one
   skipped       shortcuts (symlinks) and hidden files: NOT followed, NOT copied, NOT read; named. A
                 shortcut can point anywhere, including the private folder, so it is never opened.
+
+PDFs are screened like any other file: their text is pulled out first (with the Mac's own PDF
+reader, pdftotext if installed, or a built-in reader for ordinary PDFs). Only a PDF with no text
+in it at all, such as a photo or scan of paper, is left unscreened.
 
 A file already looked at in an earlier run, and unchanged since, is skipped and only counted, so the
 owner can keep adding to the same folder and say "read my new documents". The folder's own note to
@@ -23,12 +27,15 @@ This is a backstop for keys, tokens, passwords and card or bank numbers. It cann
 kind of private information; the owner chooses the folder and hears every file name before it is
 kept.
 """
+import base64
 import datetime
 import json
 import re
 import shutil
+import subprocess
 import sys
 import zipfile
+import zlib
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -55,8 +62,109 @@ def office_text(path: Path) -> str:
     with zipfile.ZipFile(path) as z:
         for name in z.namelist():
             if name.endswith('.xml') and ('word/' in name or 'xl/' in name or 'ppt/slides/' in name):
-                parts.append(re.sub(r'<[^>]+>', ' ', z.read(name).decode('utf-8', errors='ignore')))
+                # spreadsheet cells are kept apart with a tab, so two neighbouring numbers never read as one
+                parts.append(re.sub(r'<[^>]+>', '\t' if 'xl/' in name else ' ', z.read(name).decode('utf-8', errors='ignore')))
     return '\n'.join(parts)
+
+
+def _pdf_strings(ops: bytes, cmap):
+    """Pull the text shown by a PDF content stream: (literal) and <hex> strings under Tj, TJ, ' and \"."""
+    out = []
+    for m in re.finditer(rb'\((?:\\.|[^\\)])*\)|<[0-9A-Fa-f\s]+>|\]\s*TJ|T\*|Td|TD|ET', ops):
+        tok = m.group(0)
+        if tok.startswith(b'('):
+            raw = re.sub(rb'\\([nrtbf()\\]|[0-7]{1,3})', lambda e: {b'n': b'\n', b'r': b'\r', b't': b'\t', b'b': b'', b'f': b''}.get(
+                e.group(1), bytes([int(e.group(1), 8) & 255]) if e.group(1)[:1].isdigit() else e.group(1)), tok[1:-1])
+        elif tok.startswith(b'<'):
+            raw = bytes.fromhex(re.sub(rb'\s', b'', tok[1:-1]).decode() + ('0' if len(re.sub(rb'\s', b'', tok[1:-1])) % 2 else ''))
+        else:
+            out.append(' ' if tok != b'ET' else '\n')
+            continue
+        if cmap:
+            width = 2 if max(len(k) for k in cmap) >= 2 and len(raw) % 2 == 0 else 1
+            out.append(''.join(cmap.get(raw[i:i + width], '') for i in range(0, len(raw), width)))
+        else:
+            out.append(raw.decode('cp1252', errors='ignore'))
+    return ''.join(out)
+
+
+def _pdf_text_builtin(data: bytes) -> str:
+    """A small reader for ordinary text PDFs (the kind invoicing and quoting tools make). No library."""
+    objs = {m.group(1): m.group(2) for m in re.finditer(rb'(\d+)\s+0\s+obj(.*?)endobj', data, re.S)}
+
+    def stream(body):
+        m = re.search(rb'stream\r?\n(.*?)\s*endstream', body, re.S)
+        if not m:
+            return b''
+        raw = m.group(1)
+        for f in re.findall(rb'/(ASCII85Decode|FlateDecode|ASCIIHexDecode)', body.split(b'stream', 1)[0]):
+            try:
+                if f == b'ASCII85Decode':
+                    raw = base64.a85decode(raw.strip().removesuffix(b'~>').removeprefix(b'<~'), adobe=False)
+                elif f == b'FlateDecode':
+                    raw = zlib.decompress(raw)
+                else:
+                    raw = bytes.fromhex(re.sub(rb'[^0-9A-Fa-f]', b'', raw).decode())
+            except Exception:
+                return b''
+        return raw
+
+    cmaps = {}
+    for num, body in objs.items():
+        m = re.search(rb'/ToUnicode\s+(\d+)\s+0\s+R', body)
+        if m and m.group(1) in objs:
+            cm, s = {}, stream(objs[m.group(1)])
+            for blk in re.findall(rb'beginbfchar(.*?)endbfchar', s, re.S):
+                for a, b in re.findall(rb'<([0-9A-Fa-f]+)>\s*<([0-9A-Fa-f]+)>', blk):
+                    cm[bytes.fromhex(a.decode())] = bytes.fromhex(b.decode()).decode('utf-16-be', errors='ignore')
+            for blk in re.findall(rb'beginbfrange(.*?)endbfrange', s, re.S):
+                for a, b, c in re.findall(rb'<([0-9A-Fa-f]+)>\s*<([0-9A-Fa-f]+)>\s*<([0-9A-Fa-f]+)>', blk):
+                    lo, hi, start, n = int(a, 16), int(b, 16), int(c, 16), len(a) // 2
+                    for i in range(min(hi - lo, 65535) + 1):
+                        cm[(lo + i).to_bytes(n, 'big')] = chr(start + i)
+            cmaps[num] = cm
+    names = {}
+    for body in objs.values():
+        for name, ref in re.findall(rb'/([^\s/<>\[\]()]+)\s+(\d+)\s+0\s+R', body):
+            if ref in cmaps:
+                names[name] = cmaps[ref]
+    text = []
+    for body in objs.values():
+        if b'stream' not in body or re.search(rb'/(Subtype\s*/Image|Type\s*/XRef|Type\s*/ObjStm|Length1)', body.split(b'stream', 1)[0]):
+            continue
+        s = stream(body)
+        if b'BT' not in s:
+            continue
+        for part in re.split(rb'(/[^\s/<>\[\]()]+\s+[\d.]+\s+Tf)', s):
+            m = re.match(rb'/([^\s/<>\[\]()]+)\s+[\d.]+\s+Tf', part)
+            if m:
+                cur = names.get(m.group(1))
+                continue
+            text.append(_pdf_strings(part, locals().get('cur')))
+    return ''.join(text)
+
+
+def pdf_text(path: Path):
+    """Text inside a PDF, or None if it has none we can reach (a photo or scan of paper)."""
+    tries = []
+    if shutil.which('pdftotext'):
+        tries.append(['pdftotext', '-q', '-layout', str(path), '-'])
+    if sys.platform == 'darwin' and shutil.which('osascript'):
+        tries.append(['osascript', '-l', 'JavaScript', '-e', 'ObjC.import("PDFKit");'
+                      'var d=$.PDFDocument.alloc.initWithURL($.NSURL.fileURLWithPath(%s));'
+                      'd.isNil()?"":ObjC.unwrap(d.string)' % json.dumps(str(path))])
+    for cmd in tries:
+        try:
+            out = subprocess.run(cmd, capture_output=True, text=True, timeout=60).stdout
+        except (OSError, subprocess.SubprocessError):
+            continue
+        if out.strip():
+            return out
+    try:
+        out = _pdf_text_builtin(path.read_bytes())
+    except Exception:
+        return None
+    return out if len(re.sub(r'\s', '', out)) >= 20 else None
 
 
 def readable_text(path: Path):
@@ -66,6 +174,8 @@ def readable_text(path: Path):
     suffix = path.suffix.lower()
     if suffix in TEXT_SUFFIXES:
         return path.read_text(errors='ignore')
+    if suffix == '.pdf':
+        return pdf_text(path)
     if suffix in OFFICE_SUFFIXES:
         try:
             return office_text(path)

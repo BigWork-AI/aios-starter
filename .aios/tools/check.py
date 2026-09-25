@@ -37,7 +37,9 @@ SECRET_PATTERNS = [
     ('Google API key', re.compile(r'\bAIza[0-9A-Za-z_-]{35}\b')),
     ('password assignment', re.compile(r'(?i)\b(?:password|passwd|pwd)\s*[:=]\s*\S{6,}')),
     ('bearer token', re.compile(r'(?i)\bbearer\s+[A-Za-z0-9._-]{20,}')),
-    ('card number', re.compile(r'\b(?:\d[ -]?){13,19}\b')),
+    # A card is written as one run of digits or in the usual groups (4-4-4-4, 4-6-5). Any spacing
+    # looser than that joins neighbouring spreadsheet cells into false alarms.
+    ('card number', re.compile(r'(?<![\d.,])(?:[3-6]\d{12,18}|[3-6]\d{3}(?:[ -]\d{4}){2}[ -]\d{1,7}|3\d{3}[ -]\d{6}[ -]\d{5})(?![\d.,])')),
     # Bank numbers only next to a bank word. A blocked save blocks the whole session, so a bare
     # "account 10023456" (a customer or supplier account) is left alone.
     ('bank routing number', re.compile(r'(?i)\b(?:routing|aba)\s*(?:number|no\.?|#)?\s*[:#]?\s*\d{9}\b')),

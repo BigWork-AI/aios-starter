@@ -191,8 +191,8 @@ mkdir -p "$PRIVATE"
 [ -f "$PRIVATE/README.md" ] || cat > "$PRIVATE/README.md" <<EOF
 # $COMPANY private folder
 
-This folder is outside the company brain on purpose. Bank, payroll, contracts you have not chosen
-to share, personal matters: they live here. The brain never opens this folder. Nothing here is
+This folder is outside the company brain on purpose. Bank and card details, passwords, contracts you
+have not chosen to share, personal matters, and payroll if you want it kept out: they live here. The brain never opens this folder. Nothing here is
 backed up by the brain; back it up the way you back up any private document.
 EOF
 
@@ -203,15 +203,14 @@ mkdir -p "$DOCUMENTS"
 
 Drop copies of anything you want the brain to know about in here: price lists, brochures,
 proposals and quotes, how-we-do-it notes, meeting notes, a ChatGPT or Claude export. PDFs and
-Word files are fine. Keep bank statements, payroll and anything personal out; those go in
-$PRIVATE.
+Word files and spreadsheets are fine, and so are your business numbers: sales, costs, margins,
+invoices. Keep bank statements and anything personal out; those go in $PRIVATE.
 
 Check every file before you drop it in: PDFs, Word files, spreadsheets, notes. Open each one and
 make sure it has none of these:
 
 - bank or card numbers, account or routing numbers
 - passwords or logins
-- pay, salary or payroll figures
 - tax, social security or ID numbers
 - staff home addresses, personal phone numbers or health details
 
