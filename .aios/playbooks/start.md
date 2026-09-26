@@ -177,7 +177,8 @@ connected before calling anything unavailable. Then, for each yes:
   to that client's ledger, `status: imported`.
 
 Write everything as `source: <account> <item>`, `status: imported`, and cross off `gaps` it
-answers. Then say in two or three plain sentences what came in and what is still missing. The
+answers. A connector search sees a slice, not the whole account: say what was searched and what
+was not ("sent mail since July, 41 threads; nothing older"), and cite each item. Then say in two or three plain sentences what came in and what is still missing. The
 questions come next, and only for those gaps.
 
 ## The tidy-up check

@@ -50,6 +50,14 @@ run the checks, save, fold any side branch into main and push). `/save` does the
 files, say where the answer came from, flag anything unconfirmed, and say "I do not have that yet"
 rather than guess.
 
+**Connected accounts are searched, not read whole.** A search of email, Drive, a calendar or a
+meeting recorder sees only what it finds, often a small, recent slice. When an answer uses one:
+say how you will search before you do (which account, what words, what dates); cite what you used
+(sender and date, file name, meeting); say plainly what the search covered and what it did not
+("I searched sent mail since July for 'Harbor': 6 threads. I did not look at older mail or other
+accounts"); and flag gaps and anything that conflicts with the brain's files. Never let a
+confident answer imply the whole account was read.
+
 **Say what is unverified.** Silence in these files is not evidence of silence in real life. Do not
 describe the state of a client, deal or job from the files alone; name the evidence or say it is
 unverified.

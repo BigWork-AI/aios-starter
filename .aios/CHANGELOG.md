@@ -2,6 +2,14 @@
 
 Plain English, newest on top. `/upgrade --check` shows the owner the entry for the version on offer.
 
+## 0.3.6
+- Straight answers about what it searched. When the brain looks in your email, Drive, calendar or
+  meeting recorder, it says what it searched, shows where each answer came from, and says what it
+  didn't look at, so a confident answer never hides a thin search.
+- A freshness check in the Friday review: facts that disagree, guesses nobody confirmed, and facts
+  not checked in six months come back to you as a few quick questions, so the brain doesn't quietly
+  go stale.
+
 ## 0.3.5
 - Your skills show up where you'd look: type / in a new chat to see them, or just ask for one in
   your own words. Skills you taught before this update are moved there for you.
