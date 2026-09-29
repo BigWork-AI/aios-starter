@@ -41,6 +41,12 @@ best place to start, and asking comes last. Otherwise say the section's consent 
   Write facts as `source: web <page address>`, `status: imported`. A web fact never overwrites a
   website fact; when they disagree, keep both and add it to `gaps` (an old address on a listing is
   exactly the kind of thing the owner wants to hear about).
+- **When a site blocks you** (Facebook, Yellow Pages and many directories turn away automated
+  visitors), never try to get around it. Name the sites that blocked you and offer two ways in:
+  "Open it in your browser and I'll read it there" (if Claude in Chrome is connected, read the page
+  in the owner's own browser, with them watching), or "Save it as a PDF (File, Print, Save as PDF)
+  and drop it in here". A saved page goes through the uploads check like any other file. For the
+  owner's own Facebook or social pages, also ask for a few of their posts: they feed the voice.
 - End with: "So I will only ask you about those, and check the rest with you as we go." Then
   go to what stays out and the documents folder (the uploads section below), before the first job.
 

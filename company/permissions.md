@@ -21,7 +21,8 @@ Anything not on the list above is drafted and shown to you. It acts on your yes,
 
 - Spend, pay, refund or move money.
 - Delete anything outside the brain: emails, files, calendar events, records.
-- Touch banking, accounting, payroll or pay.
+- Change anything in banking, accounting, payroll or pay. (Reading invoices, reports and totals
+  is fine once you connect them; it never changes a record or saves a card or bank number.)
 - Change passwords, security settings, or who something is shared with.
 - Open the private folder.
 

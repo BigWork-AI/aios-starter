@@ -2,6 +2,14 @@
 
 Plain English, newest on top. `/upgrade --check` shows the owner the entry for the version on offer.
 
+## 0.3.8
+- Connect Xero, Stripe or your bookkeeping software and the brain will look up invoices, reports and totals for
+  you. It still never changes a record there, never moves money, and never saves a card or bank
+  number. Your permissions page is updated to say so.
+- When a site blocks the brain (Facebook, Yellow Pages and many directories do), it tells you which
+  ones and asks you to open them in your browser or save them as a PDF and drop them in, instead of
+  quietly skipping them.
+
 ## 0.3.7
 - A coach in the Friday review. From your follow-up list, what the brain did for you, and where
   the week's work went, it tells you two things you did well and one habit worth changing, with
