@@ -8,7 +8,15 @@
    time, most costly first (prices and terms before names). Write each answer with today's date and
    `confirmed`; move what is no longer true to a "History" note in the same file with its old date,
    never delete it. Say how many are left for next week.
-4. Ask the owner, one at a time, about anything the files cannot see: calls, texts, DMs, handshakes. Silence in the files is not silence in real life. Write the answers as `confirmed` facts.
-5. Write `memory/reviews/YYYY-MM-DD.md`: what moved, what is stuck, the three things for next week, each with a date and an owner. Decisions taken during the review go to `memory/decisions.md`.
-6. Close finished follow-ups (DONE with date) and add new ones.
-7. Report in the house style: one line, three bullets, the one risk, next week's first action. Then save (`sh .aios/hooks/autosave.sh`).
+4. **Coach notes.** Run `python3 .aios/tools/coach.py`. It looks back over the week from the
+   follow-up list, the action log and the saved history: promises kept on time, promises gone
+   overdue, dates pushed, where the work went, late-night saves. Say two things that went well
+   first, with the number behind each. Then pick one pattern worth changing, not five, and
+   suggest one concrete habit for next week ("first half hour Monday goes to the overdue list").
+   Ask the owner what the files cannot see before drawing a conclusion; their answer beats the
+   numbers. Write the habit into this week's review, and next week open by asking whether it held.
+   Coaching uses these files only: no screen recording, no keystrokes, no reading the mailbox.
+5. Ask the owner, one at a time, about anything the files cannot see: calls, texts, DMs, handshakes. Silence in the files is not silence in real life. Write the answers as `confirmed` facts.
+6. Write `memory/reviews/YYYY-MM-DD.md`: what moved, what is stuck, the habit picked, the three things for next week, each with a date and an owner. Decisions taken during the review go to `memory/decisions.md`.
+7. Close finished follow-ups (DONE with date) and add new ones.
+8. Report in the house style: one line, three bullets, the one risk, next week's first action. Then save (`sh .aios/hooks/autosave.sh`).

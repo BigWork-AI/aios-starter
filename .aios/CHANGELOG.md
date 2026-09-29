@@ -2,6 +2,12 @@
 
 Plain English, newest on top. `/upgrade --check` shows the owner the entry for the version on offer.
 
+## 0.3.7
+- A coach in the Friday review. From your follow-up list, what the brain did for you, and where
+  the week's work went, it tells you two things you did well and one habit worth changing, with
+  the numbers behind each. It says what it can't see (calls, texts, work outside Claude) and asks
+  you before drawing a conclusion. No screen recording.
+
 ## 0.3.6
 - Straight answers about what it searched. When the brain looks in your email, Drive, calendar or
   meeting recorder, it says what it searched, shows where each answer came from, and says what it
