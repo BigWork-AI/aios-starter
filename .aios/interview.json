@@ -16,17 +16,17 @@
     {
       "id": "welcome",
       "title": "Hello",
-      "say": "Hey! I'm your BigWork AI-OS. Right now I know nothing about Rehearsal Co, and that changes fast. I read what you've already got first: your website, then any files and accounts you want to share. Then I only ask about what's missing. It all lands in plain files you own, and you can stop any time and pick it back up. Don't type, talk: hit the microphone in the message box and ramble. I'll sort it out. Ready?",
+      "say": "Hey! I'm your BigWork AI-OS. Right now I know nothing about %%COMPANY%%, and that changes fast. I read what you've already got first: your website, then any files and accounts you want to share. Then I only ask about what's missing. It all lands in plain files you own, and you can stop any time and pick it back up. Don't type, talk: hit the microphone in the message box and ramble. I'll sort it out. Ready?",
       "writes": []
     },
     {
       "id": "website",
       "title": "Your website first",
-      "say": "Let's start with your website. I'll read it, plus what the rest of the web says about Rehearsal Co, so I'm not asking you stuff that's already out there.",
+      "say": "Let's start with your website. I'll read it, plus what the rest of the web says about %%COMPANY%%, so I'm not asking you stuff that's already out there.",
       "questions": [
         "What's your website address? No website is fine: just say 'no website' and we'll start with your files instead."
       ],
-      "consent": "Here's what I'll read: the public pages on your site, fifteen at most (home, services, prices, about, team, locations, FAQs, reviews, contact). Then I'll search the web for Rehearsal Co by name and read up to five public pages about you on other sites, like a Google or Yelp listing, a directory, or a news story. I won't log in, fill in a form, or open anything behind a password. Everything I find stays marked as from your website or the web until you confirm it. Good to go?",
+      "consent": "Here's what I'll read: the public pages on your site, fifteen at most (home, services, prices, about, team, locations, FAQs, reviews, contact). Then I'll search the web for %%COMPANY%% by name and read up to five public pages about you on other sites, like a Google or Yelp listing, a directory, or a news story. I won't log in, fill in a form, or open anything behind a password. Everything I find stays marked as from your website or the web until you confirm it. Good to go?",
       "then": "Write every fact found as source=website <page> or source=web <page>, status=imported; web facts never overwrite website facts, and a disagreement between them goes to the gaps. Then say what you found in three or four plain sentences, and list the gaps: each later question neither answered, plus anything that looks out of date or contradicts itself. Save the gaps to memory/onboarding.json#gaps. Then go straight to what stays out and the documents folder, before the first job and before any question. If a site blocks you, never try to get around it: name it and say 'Open it in your browser and I'll read it there, or save it as a PDF (File, Print, Save as PDF) and drop it in.'",
       "writes": [
         "company/identity.md",
@@ -70,7 +70,7 @@
     {
       "id": "first_job",
       "title": "Your first real job, in a few minutes",
-      "say": "Let's knock out one real job for Rehearsal Co right now, from what I just read, so you see me work before I ask you much. Something like a follow-up to a customer who went quiet, this week's short blog post, or your price list as one clean page. Pick one, or tell me yours.",
+      "say": "Let's knock out one real job for %%COMPANY%% right now, from what I just read, so you see me work before I ask you much. Something like a follow-up to a customer who went quiet, this week's short blog post, or your price list as one clean page. Pick one, or tell me yours.",
       "offer_rules": [
         "Agree one job with the owner. Suggest from what the website, the web look-up and the documents found; if the owner names their own, take it if it is right-sized, and if not, offer the nearest version that is.",
         "No website and no documents: ask two quick questions first (what do you sell, and one customer you are dealing with right now), then suggest from those answers. If either one gave you enough, ask nothing.",
@@ -155,7 +155,7 @@
       "title": "Who you are",
       "say": "Now just the stuff your website, files and accounts didn't tell me. Anything I found, I'll read back to you as a question.",
       "questions": [
-        "In one or two sentences, what does Rehearsal Co do, and for whom?",
+        "In one or two sentences, what does %%COMPANY%% do, and for whom?",
         "Who runs it, and who else works in it? Names and what each person owns."
       ],
       "writes": [

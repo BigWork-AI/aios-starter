@@ -1,6 +1,6 @@
 company: "Rehearsal Co"
 slug: rehearsal-co
-engine: 0.3.8
+engine: 0.3.9
 harness: claude-code
 installed: 2026-10-07
 private_folder: /root/rehearsal-co-private

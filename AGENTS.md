@@ -4,7 +4,7 @@ This is the company brain for Rehearsal Co, installed as BigWork AI-OS. It holds
 knows and how it works, in plain files the owner controls. Read this file before any work here.
 
 <!-- aios:engine-begin -->
-## Engine rules (BigWork AI-OS 0.3.8; replaced on upgrade, do not edit inside this block)
+## Engine rules (BigWork AI-OS 0.3.9; replaced on upgrade, do not edit inside this block)
 
 **Truth has a source.** Every business fact written here carries a source, a date and a status:
 `confirmed` (the owner said so), `imported` (pulled from a website, file, email or export and not
