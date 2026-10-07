@@ -101,11 +101,11 @@ company works: tone, things never to say, people to always copy, hours, seasons.
 Plain words work as well as commands. "Set up my company brain", "let's start" or "hello" on a
 brain that has not finished `/start` means run the start playbook. "File that meeting" means
 `/meeting`. "Remember what we learned" means `/learned`. "Add a client" means `/client`. "Do the
-weekly review" means `/week`. "Teach you something", "I wish I did not have to do X" or "I hate doing X" means `/teach`. "Save"
+weekly review" means `/week`. "Give me my live review", "show me everything going on" or "live review" means `/live`. "Teach you something", "I wish I did not have to do X" or "I hate doing X" means `/teach`. "Save"
 means `/save`. "You can always do that" or "stop doing that" means update `company/permissions.md`. The owner never has to know the slash names.
 
 `/start` interview and setup · `/meeting` file a meeting that was not recorded (recorded meetings
 file themselves through the sweep in `.aios/playbooks/meeting-sweep.md`) · `/learned` capture what a
-session taught · `/client` add or update a client · `/week` weekly review · `/teach` teach the brain
+session taught · `/client` add or update a client · `/week` weekly review · `/live` the live review page · `/teach` teach the brain
 a task · `/upgrade` bring the engine up to date now (it also keeps itself current on its own). `/save` saves on demand; saving is otherwise automatic. Each one follows the playbook of the
 same name in `.aios/playbooks/`.

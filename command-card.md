@@ -1,6 +1,6 @@
 # Command card
 
-Six commands. Questions need no command: ask the brain anything in plain words, in any window.
+Seven commands. Questions need no command: ask the brain anything in plain words, in any window.
 
 **Talk, do not type.** Click the microphone in Claude's message box, on the laptop or the phone, and speak.
 
@@ -11,6 +11,7 @@ Six commands. Questions need no command: ask the brain anything in plain words, 
 | `/learned` | Before closing a chat: everything worth keeping gets written to the right place. |
 | `/client` | Add a new client or prospect, or update where one stands. |
 | `/week` | Friday review: what moved, what is overdue, what to do next week. |
+| `/live` | Your live review: everything going on, biggest first, on a page you tick, note and send back. Or just say "give me my live review". |
 | `/teach` | Show it a job you wish you did not have to do, in your words. From then on you just ask for it. |
 
 The engine keeps itself current each time the brain opens; `/upgrade` does it on demand. Saving is automatic when a session ends. `/save` does it on demand if you want to be sure.

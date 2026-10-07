@@ -6,3 +6,5 @@ inbox/quarantine/*
 !inbox/quarantine/README.md
 # local stamps, never shared
 memory/receipts/upgrade-check.json
+# Live review pages are rebuilt from the files each time
+memory/reviews/live-*.html
