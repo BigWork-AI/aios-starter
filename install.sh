@@ -1,29 +1,45 @@
 #!/bin/sh
 # BigWork AI-OS installer.
 #
-# The one line a customer pastes (fetches the kit itself, nothing to download first):
+# The one line a customer pastes, from their welcome kit (it names the release and BigWork's key):
 #
-#   curl -fsSL https://raw.githubusercontent.com/BigWork-AI/aios-starter/main/install.sh | sh
+#   curl -fsSL https://raw.githubusercontent.com/BigWork-AI/aios-starter/v0.3.10/install.sh | sh -s -- "Acme Roofing" --key SHA256:...
 #
-# It asks for the business name and makes the short name from it. Both can be given up front
-# instead: ... | sh -s -- "Acme Roofing" acme-roofing
+# It asks for the business name if none is given, and makes the short name from it. The short
+# name can be given too: ... | sh -s -- "Acme Roofing" acme-roofing --key SHA256:...
 #
-# Or, with a local copy of the kit (friends-week, USB stick):
+# Or, with a local copy of the kit (friends-week, USB stick), which must carry its signed release
+# list (releases.json, releases.json.sig) and release-key.pub:
 #
-#   AIOS_SOURCE=./aios-starter sh aios-starter/install.sh "Acme Roofing" acme-roofing
+#   AIOS_SOURCE=./aios-starter sh aios-starter/install.sh "Acme Roofing" --key SHA256:...
+#
+# Before anything is written it checks three things: the key it downloads has the fingerprint the
+# owner was given (so it is BigWork's), the release list is signed by that key, and the engine
+# matches the digest in that list. The key is then pinned in the brain, and every later upgrade is
+# checked against it. Without --key nothing is installed, except for BigWork's own tests
+# (AIOS_DEV=1), which get a brain marked "verify: none".
 #
 # Creates a private company brain for the named business, wires the checks, makes the private
-# folder and the documents drop folder outside the repository, and opens the kickoff interview. Safe to run twice: every step
-# checks before it acts.
+# folder and the documents drop folder outside the repository, and opens the kickoff interview.
+# Safe to run twice: every step checks before it acts.
 #
 # Where the kit comes from, in order:
-#   1. AIOS_SOURCE=/path/to/aios-starter      a local copy
-#   2. AIOS_KIT_URL=<tarball url>             a specific kit archive
-#   3. the public kit repository (AIOS_REPO, default BigWork-AI/aios-starter), fetched with curl
+#   1. AIOS_SOURCE=/path/to/aios-starter      a local copy (its .git, if any, is never kept)
+#   2. AIOS_SHELF=<folder address>            releases.json, its signature, release-key.pub and the
+#      AIOS_ARCHIVE=<folder address>          release archives (<tag>.tar.gz), for BigWork's tests
+#   3. the public kit repository (AIOS_REPO, default BigWork-AI/aios-starter)
 set -eu
 
-COMPANY="${1:-}"
-SLUG="${2:-}"
+COMPANY=""; SLUG=""; KEY_FP=""
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --key) [ $# -ge 2 ] || { echo "--key needs the fingerprint from your welcome kit (SHA256:...)."; exit 2; }; KEY_FP=$2; shift ;;
+    --key=*) KEY_FP=${1#--key=} ;;
+    -*) echo "Unknown option $1. Nothing was installed."; exit 2 ;;
+    *) if [ -z "$COMPANY" ]; then COMPANY=$1; elif [ -z "$SLUG" ]; then SLUG=$1; else echo "Too many names given. Nothing was installed."; exit 2; fi ;;
+  esac
+  shift
+done
 # Piped into sh, the script itself is on standard input, so the question is asked on the terminal.
 TTY="${AIOS_TTY:-/dev/tty}"
 if [ -z "$COMPANY" ] && (: < "$TTY") 2>/dev/null; then
@@ -44,8 +60,13 @@ if [ -z "$SLUG" ] && [ -n "$COMPANY" ]; then
     | tr '[:upper:]' '[:lower:]' | sed "s/[\"']//g; s/&/and/g; s/[^a-z0-9][^a-z0-9]*/-/g; s/^-//; s/-\$//")
 fi
 if [ -z "$COMPANY" ] || [ -z "$SLUG" ]; then
-  echo "usage: curl -fsSL https://raw.githubusercontent.com/BigWork-AI/aios-starter/main/install.sh | sh -s -- \"Company Name\" company-slug"; exit 2
+  echo "usage: curl -fsSL https://raw.githubusercontent.com/BigWork-AI/aios-starter/<release>/install.sh | sh -s -- \"Company Name\" --key SHA256:<fingerprint from your welcome kit>"; exit 2
 fi
+if [ -z "$KEY_FP" ] && [ "${AIOS_DEV:-0}" != 1 ]; then
+  echo "This install needs BigWork's key fingerprint, the --key SHA256:... part of the line in your welcome kit. Nothing was installed."
+  exit 2
+fi
+case "$KEY_FP" in ""|SHA256:*) ;; *) echo "The key fingerprint should look like SHA256:... (it is in your welcome kit). Nothing was installed."; exit 2 ;; esac
 # The name goes into files through sed, where & and | have special meanings.
 COMPANY_SED=$(printf '%s' "$COMPANY" | sed 's/[&|\\]/\\&/g')
 # In aios.yml the name sits inside double quotes, so its own quotes and backslashes are escaped.
@@ -106,6 +127,10 @@ if [ -n "$missing" ]; then
   printf 'Before the brain can be built:%b\n' "$missing"
   exit 1
 fi
+if [ -n "$KEY_FP" ] && ! need openssl; then
+  echo "openssl is missing, so BigWork's signature cannot be checked. It ships with macOS; on Linux install it, then paste the same line again."
+  exit 1
+fi
 # Claude Code: install it if we can, otherwise say exactly where to get it.
 # AIOS_INSTALL_CLAUDE=0 skips this (the kit's tests use it so they never download anything).
 if ! need claude && [ "${AIOS_INSTALL_CLAUDE:-1}" = 1 ]; then
@@ -127,30 +152,108 @@ fi
 # GitHub is optional at install: it is the online backup and the phone link, connected during the session.
 need gh && GH=1 || GH=0
 
+# The same digest BigWork's release list names: every file sorted by path, "sha256  path" lines,
+# then the sha256 of those lines (.git, caches, the list and its signature left out). This copy
+# lives here because the kit's own copy (.aios/tools/kitdigest.py) has not been verified yet.
+kit_digest() {
+  python3 - "$1" <<'PY'
+import hashlib, sys
+from pathlib import Path
+root = Path(sys.argv[1]); lines = []
+for p in sorted(root.rglob('*'), key=lambda q: q.relative_to(root).as_posix()):
+    rel = p.relative_to(root)
+    if any(part in ('.git', '__pycache__') for part in rel.parts) or not p.is_file():
+        continue
+    if p.name in ('.DS_Store', 'releases.json', 'releases.json.sig') or p.name.endswith('.pyc'):
+        continue
+    h = hashlib.sha256()
+    with p.open('rb') as f:
+        for chunk in iter(lambda: f.read(1 << 16), b''):
+            h.update(chunk)
+    lines.append(f'{h.hexdigest()}  {rel.as_posix()}\n')
+print(hashlib.sha256(''.join(lines).encode()).hexdigest())
+PY
+}
+key_fingerprint() {
+  python3 - "$1" <<'PY'
+import base64, hashlib, sys
+body = ''.join(l.strip() for l in open(sys.argv[1]).read().splitlines() if not l.startswith('-----'))
+print('SHA256:' + hashlib.sha256(base64.b64decode(body)).hexdigest()[:32])
+PY
+}
+fetch() {  # fetch <address> <file>
+  case "$1" in
+    file://*) cp "${1#file://}" "$2" 2>/dev/null ;;
+    http://*|https://*) curl -fsSL --max-time 20 "$1" -o "$2" 2>/dev/null ;;
+    *) cp "$1" "$2" 2>/dev/null ;;
+  esac
+}
+# verify_kit <kit folder> <folder holding releases.json, releases.json.sig and release-key.pub>
+# Fails, with nothing written, unless the key, the signature and the digest all check.
+verify_kit() {
+  kit=$1; shelf=$2
+  [ -f "$shelf/releases.json" ] || { echo "No release list (releases.json) came with the kit, so it cannot be checked. Nothing was installed. Tell BigWork."; return 1; }
+  set -- $(python3 -c 'import json,sys
+try:
+    m=json.load(open(sys.argv[1])); v=str(m["latest"]); print(v, m.get("tag","v"+v), m["sha256"])
+except Exception: print("bad bad bad")' "$shelf/releases.json")
+  [ "$1" != bad ] || { echo "BigWork's release list could not be read. Nothing was installed. Tell BigWork."; return 1; }
+  if [ -n "$KEY_FP" ]; then
+    [ -f "$shelf/release-key.pub" ] || { echo "BigWork's key did not come with the kit, so the release cannot be checked. Nothing was installed. Tell BigWork."; return 1; }
+    got=$(key_fingerprint "$shelf/release-key.pub" 2>/dev/null || echo none)
+    [ "$got" = "$KEY_FP" ] || { echo "The key that came with the kit ($got) is not the one in your welcome kit ($KEY_FP). Nothing was installed. Tell BigWork before trying again."; return 1; }
+    openssl dgst -sha256 -verify "$shelf/release-key.pub" -signature "$shelf/releases.json.sig" "$shelf/releases.json" >/dev/null 2>&1 \
+      || { echo "BigWork's release list is not signed by BigWork's key. Nothing was installed. Tell BigWork."; return 1; }
+  fi
+  [ "$(kit_digest "$kit")" = "$3" ] || { echo "The engine does not match BigWork's release list, so it was not installed. Paste the same line again; if it happens twice, tell BigWork."; return 1; }
+  [ "$(tr -d '[:space:]' < "$kit/.aios/VERSION")" = "$1" ] || { echo "The engine says it is $(cat "$kit/.aios/VERSION") but the release list says $1. Nothing was installed. Tell BigWork."; return 1; }
+  KIT_TAG=$2
+  return 0
+}
+
 say "Creating the brain at $DEST"
 if [ -d "$DEST/.aios" ]; then
   echo "Already exists; keeping it."
 elif [ -n "${AIOS_SOURCE:-}" ]; then
+  if [ -n "$KEY_FP" ] || [ -f "$AIOS_SOURCE/releases.json" ]; then
+    verify_kit "$AIOS_SOURCE" "$AIOS_SOURCE" || exit 1
+  fi
   mkdir -p "$DEST"
   cp -R "$AIOS_SOURCE"/. "$DEST"/
-  rm -f "$DEST/install.sh"
+  # A copy of the kit may be a clone of BigWork's public repository. Its history and its "origin"
+  # must never become this brain's: the brain gets its own private copy, made later.
+  rm -rf "$DEST/.git"
+  rm -f "$DEST/install.sh" "$DEST/releases.json" "$DEST/releases.json.sig"
+  [ -z "$KEY_FP" ] || { mkdir -p "$DEST/.bigwork" && cp "$AIOS_SOURCE/release-key.pub" "$DEST/.bigwork/release-key.pub"; }
+  rm -f "$DEST/release-key.pub"
   (cd "$DEST" && git init -q -b main)
 else
   need curl || { echo "curl is missing. Install it (it ships with macOS) and run this again."; exit 1; }
   need tar || { echo "tar is missing. Install it and run this again."; exit 1; }
-  KIT_URL="${AIOS_KIT_URL:-https://github.com/${AIOS_REPO:-BigWork-AI/aios-starter}/archive/refs/heads/main.tar.gz}"
+  REPO="${AIOS_REPO:-BigWork-AI/aios-starter}"
+  SHELF="${AIOS_SHELF:-https://raw.githubusercontent.com/$REPO/main}"
   TMP=$(mktemp -d)
   trap 'rm -rf "$TMP"' EXIT
-  echo "Fetching the kit from $KIT_URL"
-  if ! curl -fsSL "$KIT_URL" -o "$TMP/kit.tar.gz"; then
-    code=$(curl -s -o /dev/null -w '%{http_code}' "$KIT_URL" 2>/dev/null || echo 000)
+  echo "Reading BigWork's release list"
+  if ! fetch "$SHELF/releases.json" "$TMP/releases.json"; then
+    code=$(curl -s -o /dev/null -w '%{http_code}' "$SHELF/releases.json" 2>/dev/null || echo 000)
     case "$code" in
-      404) echo "The BigWork kit is not published at $KIT_URL yet. That is on BigWork's side, not yours: nothing on this computer is wrong. Tell BigWork, or install from a copy of the kit with: AIOS_SOURCE=/path/to/aios-starter sh /path/to/aios-starter/install.sh \"$COMPANY\" $SLUG" ;;
+      404) echo "BigWork's release list is not published at $SHELF yet. That is on BigWork's side, not yours: nothing on this computer is wrong. Tell BigWork." ;;
       000) echo "Could not reach GitHub. Check the internet connection and paste the same line again." ;;
-      *)   echo "GitHub answered $code while fetching the kit. Paste the same line again in a minute; if it keeps happening, tell BigWork." ;;
+      *)   echo "GitHub answered $code while fetching the release list. Paste the same line again in a minute; if it keeps happening, tell BigWork." ;;
     esac
     exit 1
   fi
+  fetch "$SHELF/releases.json.sig" "$TMP/releases.json.sig" || true
+  TAG=$(python3 -c 'import json,sys; m=json.load(open(sys.argv[1])); print(m.get("tag","v"+str(m["latest"])))' "$TMP/releases.json" 2>/dev/null || echo "")
+  [ -n "$TAG" ] || { echo "BigWork's release list could not be read. Nothing was installed. Tell BigWork."; exit 1; }
+  if [ -n "$KEY_FP" ]; then
+    if [ -n "${AIOS_SHELF:-}" ]; then KEY_URL="$SHELF/release-key.pub"; else KEY_URL="https://raw.githubusercontent.com/$REPO/$TAG/release-key.pub"; fi
+    fetch "$KEY_URL" "$TMP/release-key.pub" || { echo "Could not fetch BigWork's key ($KEY_URL). Paste the same line again; if it keeps happening, tell BigWork."; exit 1; }
+  fi
+  ARCHIVE="${AIOS_ARCHIVE:-https://github.com/$REPO/archive/refs/tags}/$TAG.tar.gz"
+  echo "Fetching engine $TAG"
+  fetch "$ARCHIVE" "$TMP/kit.tar.gz" || { echo "Could not download the engine ($ARCHIVE). Paste the same line again in a minute; if it keeps happening, tell BigWork."; exit 1; }
   mkdir -p "$TMP/kit"
   if ! tar -xzf "$TMP/kit.tar.gz" -C "$TMP/kit" 2>/dev/null; then
     echo "The kit download was damaged, so nothing was installed. Paste the same line again; if it happens twice, tell BigWork."
@@ -159,9 +262,12 @@ else
   SRC=$(find "$TMP/kit" -maxdepth 3 -name .aios -type d | head -1)
   [ -n "$SRC" ] || { echo "The downloaded kit is not a BigWork AI-OS starter (no .aios folder)."; exit 1; }
   SRC=$(dirname "$SRC")
+  verify_kit "$SRC" "$TMP" || exit 1
   mkdir -p "$DEST"
   cp -R "$SRC"/. "$DEST"/
-  rm -f "$DEST/install.sh"
+  rm -rf "$DEST/.git"
+  rm -f "$DEST/install.sh" "$DEST/releases.json" "$DEST/releases.json.sig" "$DEST/release-key.pub"
+  [ -z "$KEY_FP" ] || { mkdir -p "$DEST/.bigwork" && cp "$TMP/release-key.pub" "$DEST/.bigwork/release-key.pub"; }
   (cd "$DEST" && git init -q -b main)
   rm -rf "$TMP"
 fi
@@ -173,6 +279,7 @@ for f in AGENTS.md README.md CLAUDE.md company/identity.md company/access.md gui
   [ -f "$f" ] && sed -i.bak "s|%%COMPANY%%|$COMPANY_SED|g; s|%%ENGINE_VERSION%%|$ENGINE|g; s|%%PRIVATE%%|$PRIVATE_SED|g; s|%%DOCUMENTS%%|$DOCUMENTS_SED|g" "$f" && rm -f "$f.bak"
 done
 if grep -q '%%COMPANY%%' aios.yml 2>/dev/null || [ ! -f aios.yml ]; then
+  if [ -n "$KEY_FP" ]; then VERIFY=signed; else VERIFY=none; fi
   cat > aios.yml <<EOF
 company: "$COMPANY_YAML"
 slug: $SLUG
@@ -182,7 +289,9 @@ installed: $TODAY
 private_folder: $PRIVATE
 documents_folder: $DOCUMENTS
 upgrade: auto
+verify: $VERIFY
 EOF
+  [ -z "$KEY_FP" ] || printf 'release_key: %s\n' "$KEY_FP" >> aios.yml
 fi
 grep -q '^documents_folder:' aios.yml || printf 'documents_folder: %s\n' "$DOCUMENTS" >> aios.yml
 
@@ -226,6 +335,7 @@ EOF
 
 say "Wiring the checks"
 chmod +x scripts/setup.sh .aios/hooks/pre-commit .aios/tools/check.py .aios/tools/gather.py .aios/tools/receipt.py .aios/tools/frontpage.py
+chmod +x .aios/tools/*.py .aios/tools/*.sh .aios/hooks/*.sh 2>/dev/null || true
 ./scripts/setup.sh
 
 say "First save"
@@ -256,8 +366,8 @@ fi
 
 say "Install receipt"
 mkdir -p memory
-printf -- '- %s installed BigWork AI-OS %s on this machine (harness: %s, private folder: %s)\n' \
-  "$TODAY" "$ENGINE" "$(need claude && echo claude-code || echo none-yet)" "$PRIVATE" >> memory/install-receipts.md
+printf -- '- %s installed BigWork AI-OS %s on this machine (harness: %s, private folder: %s, engine verified: %s)\n' \
+  "$TODAY" "$ENGINE" "$(need claude && echo claude-code || echo none-yet)" "$PRIVATE" "$([ -n "$KEY_FP" ] && echo "yes, key $KEY_FP" || echo "no, BigWork test install")" >> memory/install-receipts.md
 git add memory/install-receipts.md && git commit -q -m "Install receipt $TODAY" 2>/dev/null || true
 
 say "Done."

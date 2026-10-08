@@ -13,7 +13,7 @@ the owner's meeting recorder connected to their Claude account, and a schedule.
    - Prompt: "Open the brain, read AGENTS.md, then run .aios/playbooks/meeting-sweep.md exactly.
      Read-only outside the repository. File what is new, write the receipt, save, and message the
      owner only if something needs them. Finally run `sh .aios/tools/upgrade.sh --auto` so the
-     engine stays current."
+     engine stays current (it installs only when aios.yml says upgrade: auto; otherwise it only reports)."
 3. Run it once by hand with the owner watching. Confirm a real meeting landed in the right folder
    and the receipt exists.
 

@@ -5,13 +5,22 @@
 #    branch, and cloud sessions cannot delete remote branches). Each fold goes through the same
 #    checks as a save: if a branch holds something that must not go in the brain, it is left
 #    alone and named, never merged.
-# 3. Keep the engine current: at most once a day, check BigWork's shelf and install a newer engine
-#    when the tree is clean (set "upgrade: ask" in aios.yml to be asked instead).
-# Quiet when there is nothing to do. Never touches a dirty tree or a session not on main.
+# 3. Keep the engine current: at most once a day, ask the updater. With "upgrade: auto" it installs
+#    a newer signed engine when the tree is clean; with "upgrade: ask" (or no setting) it only says
+#    one is available. The updater itself decides; this hook never installs anything.
+# Quiet when there is nothing to do. Never touches a dirty tree or a session not on main, and never
+# pushes to BigWork's public kit (see .aios/tools/kit_home.sh).
 set -u
 cd "$(git rev-parse --show-toplevel 2>/dev/null || pwd)" || exit 0
+. .aios/tools/kit_home.sh 2>/dev/null || { aios_kit_home() { return 1; }; aios_push() { git push "$@"; }; }
+yml_value() { sed -n "s/^$1:[[:space:]]*//p" aios.yml 2>/dev/null | head -1 | sed 's/#.*//; s/["'"'"' 	]//g' | tr -d '\r' | tr '[:upper:]' '[:lower:]'; }
+
 sync_from_other_devices() {
 git remote get-url origin >/dev/null 2>&1 || return 0
+if aios_kit_home; then
+  echo "This folder's GitHub copy is BigWork's public kit, not your brain. Not syncing with it. Tell BigWork."
+  return 0
+fi
 [ "$(git branch --show-current 2>/dev/null)" = main ] || return 0
 [ -z "$(git status --porcelain)" ] || return 0
 
@@ -23,7 +32,7 @@ for ref in $(git for-each-ref --format='%(refname:short)' refs/remotes/origin | 
   branch=${ref#origin/}
   # already in main? then only the leftover branch needs removing
   if git merge-base --is-ancestor "$ref" main 2>/dev/null; then
-    git push -q origin --delete "$branch" 2>/dev/null || true
+    aios_push -q origin --delete "$branch" 2>/dev/null || true
     continue
   fi
   if ! git merge -q --no-ff --no-commit "$ref" 2>/dev/null; then
@@ -39,32 +48,27 @@ for ref in $(git for-each-ref --format='%(refname:short)' refs/remotes/origin | 
   git -c user.name="${GIT_AUTHOR_NAME:-$(git config user.name || echo owner)}" \
       -c user.email="${GIT_AUTHOR_EMAIL:-$(git config user.email || echo owner@brain.local)}" \
       commit -q -m "Fold save from another device ($branch)" 2>/dev/null || true
-  git push -q origin --delete "$branch" 2>/dev/null || true
+  aios_push -q origin --delete "$branch" 2>/dev/null || true
   folded=$((folded + 1))
 done
 if [ "$folded" -gt 0 ]; then
-  git push -q origin main 2>/dev/null && echo "Brought in $folded save(s) from another device." || echo "Brought in $folded save(s) from another device. Could not push to GitHub yet; it will push at the next save."
+  aios_push -q origin main 2>/dev/null && echo "Brought in $folded save(s) from another device." || echo "Brought in $folded save(s) from another device. Could not push to GitHub yet; it will push at the next save."
 fi
 }
 
 keep_engine_current() {
   [ -f .aios/tools/upgrade.sh ] || return 0
   [ "$(git branch --show-current 2>/dev/null)" = main ] || return 0
-  mode=$(sed -n 's/^upgrade: *//p' aios.yml 2>/dev/null | head -1)
-  [ "$mode" = ask ] && return 0
+  if [ "$(yml_value verify)" = none ]; then
+    echo "This brain installs unsigned engines (verify: none in aios.yml). That is for BigWork's own testing only; if you did not choose it, tell BigWork."
+  fi
   stamp=memory/receipts/upgrade-check.json
   if [ -f "$stamp" ] && [ -n "$(find "$stamp" -mmin -1440 2>/dev/null)" ]; then return 0; fi
-  before=$(cat .aios/VERSION 2>/dev/null)
-  log=$(mktemp)
-  sh .aios/tools/upgrade.sh --auto >"$log" 2>&1 || true
-  after=$(cat .aios/VERSION 2>/dev/null)
-  if [ "$before" != "$after" ]; then
-    echo "Engine updated to $after. What changed:"
-    awk -v v="$after" '$0 ~ "^## "v {f=1; next} /^## / {f=0} f' .aios/CHANGELOG.md 2>/dev/null | sed 's/^/  /'
-  elif grep -q "Rolling back" "$log" 2>/dev/null; then
-    echo "A newer engine was found but its checks failed, so it was not installed. Tell BigWork."
-  fi
-  rm -f "$log"
+  # The updater says what matters and nothing else: silent when current or offline, one line when a
+  # newer engine waits for the owner, the change list when it installed one, a warning when something
+  # on the shelf did not check out.
+  log=$(sh .aios/tools/upgrade.sh --auto 2>/dev/null || true)
+  [ -z "$log" ] || printf '%s\n' "$log"
 }
 
 sync_from_other_devices

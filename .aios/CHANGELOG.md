@@ -2,6 +2,17 @@
 
 Plain English, newest on top. `/upgrade --check` shows the owner the entry for the version on offer.
 
+## 0.3.10
+- Updates are now checked before they install. Only a release signed by BigWork's key, matching
+  BigWork's published release list, and newer than the one you have, can go in. The first time, the
+  brain reads you the key's fingerprint to confirm against your welcome kit; after that it is pinned.
+- "Ask before upgrading" is now honoured by the updater itself, not only when a session starts, so a
+  scheduled job cannot slip past it. A missing or garbled setting means ask.
+- /upgrade shows the changes and waits for your yes. The Friday review offers it instead of running it.
+- If an update fails partway, every file in the brain goes back exactly as it was.
+- A brain can no longer push itself into BigWork's public kit, whatever its GitHub copy points at.
+  (Found by a friends-week owner on 2026-10-07, and by BigWork's own rehearsal the same day.)
+
 ## 0.3.8
 - Connect Xero, Stripe or your bookkeeping software and the brain will look up invoices, reports and totals for
   you. It still never changes a record there, never moves money, and never saves a card or bank

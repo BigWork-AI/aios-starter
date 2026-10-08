@@ -5,4 +5,5 @@ engine: %%ENGINE_VERSION%%
 harness: claude-code
 installed: YYYY-MM-DD
 private_folder: %%PRIVATE%%
-upgrade: auto          # auto: the engine keeps itself current | ask: the owner is asked first
+upgrade: auto          # auto: the engine keeps itself current | ask: the owner is asked first (anything else means ask)
+verify: signed         # signed: only engines signed by BigWork's pinned key install | none: BigWork's own tests only

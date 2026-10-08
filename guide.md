@@ -55,7 +55,7 @@ That only happens if chats end with `/learned`.
 - **Yours:** everything about your business in these files. Take it anywhere, any time.
 - **BigWork's:** the engine underneath (the folder called `.aios`): the interview, the playbooks,
   the checks. You are licensed to use it. If we part ways, what is installed keeps working with your
-  own AI account; updates, tuning and support stop. Updates take care of themselves: each time your brain opens it checks for a newer engine and installs it, then tells you in one line what changed. Your files are never touched by an upgrade, and BigWork never needs a key to your account to ship one. If you would rather be asked first, tell us and we switch it to ask.
+  own AI account; updates, tuning and support stop. Updates take care of themselves: each time your brain opens it checks for a newer engine and installs it, then tells you in one line what changed. Before anything installs it checks that the release is signed by BigWork's key (the fingerprint in your welcome kit, pinned in your brain at install), that it matches BigWork's published release list, and that it is newer than what you have; if an update fails partway, every file goes back as it was. Your files are never touched by an upgrade, and BigWork never needs a key to your account to ship one. If you would rather be asked first, say "ask me before upgrading" and the brain switches the setting; then only /upgrade, after your yes, installs.
 
 ## What you can rename
 

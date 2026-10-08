@@ -1,13 +1,15 @@
 #!/bin/sh
 # BigWork AI-OS autosave. Runs when a session ends (Claude Code SessionEnd hook) and on /save.
 # Safe by design: if the checks find something private, nothing is saved and the reason is printed.
+# It pushes to the owner's own GitHub copy and never to BigWork's public kit (.aios/tools/kit_home.sh).
 set -u
 cd "$(git rev-parse --show-toplevel 2>/dev/null || pwd)" || exit 0
 git rev-parse --git-dir >/dev/null 2>&1 || exit 0
+. .aios/tools/kit_home.sh 2>/dev/null || { aios_kit_home() { return 1; }; aios_push() { git push "$@"; }; }
 branch=$(git branch --show-current 2>/dev/null || echo main)
 if [ -z "$(git status --porcelain)" ] && [ "$branch" = main ]; then
   # nothing new locally; still push anything unpushed
-  git remote get-url origin >/dev/null 2>&1 && git push -q origin main 2>/dev/null
+  git remote get-url origin >/dev/null 2>&1 && { aios_push -q origin main 2>/dev/null || true; }
   exit 0
 fi
 python3 .aios/tools/frontpage.py >/dev/null 2>&1 || true
@@ -23,13 +25,17 @@ git -c user.name="${GIT_AUTHOR_NAME:-$(git config user.name || echo owner)}" \
 if [ "$branch" != main ]; then
   # a cloud or phone session started on a side branch: fold it into main, one line of history
   git checkout -q main 2>/dev/null || git checkout -q -b main
-  git remote get-url origin >/dev/null 2>&1 && git pull -q --ff-only origin main 2>/dev/null
+  git remote get-url origin >/dev/null 2>&1 && ! aios_kit_home && git pull -q --ff-only origin main 2>/dev/null
   git merge -q --no-edit "$branch" 2>/dev/null || { echo "Could not fold branch '$branch' into main automatically. Run /save and read the message."; exit 0; }
   git branch -q -D "$branch" 2>/dev/null
-  git remote get-url origin >/dev/null 2>&1 && git push -q origin --delete "$branch" 2>/dev/null
+  git remote get-url origin >/dev/null 2>&1 && { aios_push -q origin --delete "$branch" 2>/dev/null || true; }
 fi
 if git remote get-url origin >/dev/null 2>&1; then
-  git push -q origin main 2>/dev/null && echo "Saved and backed up to GitHub." || echo "Saved locally. Could not reach GitHub; it will push next time."
+  if aios_kit_home; then
+    echo "Saved locally. This folder's GitHub copy is BigWork's public kit, not your brain, so nothing was pushed. Tell BigWork."
+  else
+    git push -q origin main 2>/dev/null && echo "Saved and backed up to GitHub." || echo "Saved locally. Could not reach GitHub; it will push next time."
+  fi
 else
   echo "Saved locally (no GitHub copy connected yet)."
 fi
