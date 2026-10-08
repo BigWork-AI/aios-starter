@@ -1,4 +1,4 @@
-# Rehearsal Co: who we are
+# %%COMPANY%%: who we are
 
 Filled by `/start`. Every row carries where it came from and whether the owner confirmed it.
 

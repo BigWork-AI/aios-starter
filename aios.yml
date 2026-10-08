@@ -1,8 +1,8 @@
-company: "Rehearsal Co"
-slug: rehearsal-co
-engine: 0.3.9
+# Written by install.sh. Machine-readable manifest of this brain.
+company: "%%COMPANY%%"
+slug: %%SLUG%%
+engine: %%ENGINE_VERSION%%
 harness: claude-code
-installed: 2026-10-07
-private_folder: /root/rehearsal-co-private
-documents_folder: /root/rehearsal-co-documents
-upgrade: auto
+installed: YYYY-MM-DD
+private_folder: %%PRIVATE%%
+upgrade: auto          # auto: the engine keeps itself current | ask: the owner is asked first

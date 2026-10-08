@@ -1,6 +1,6 @@
-# Rehearsal Co · company brain
+# %%COMPANY%% · company brain
 
-Built on BigWork AI-OS. This is where Rehearsal Co keeps what it knows and how it works, in plain
+Built on BigWork AI-OS. This is where %%COMPANY%% keeps what it knows and how it works, in plain
 files you own, with an AI that reads them and does the work.
 
 <!-- aios:frontpage-begin -->

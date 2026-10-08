@@ -1,6 +1,6 @@
 # Your company brain: what you got and how it grows
 
-Written for the owner of Rehearsal Co. Print it if you like.
+Written for the owner of %%COMPANY%%. Print it if you like.
 
 ## What this is
 
@@ -35,11 +35,11 @@ That only happens if chats end with `/learned`.
 
 - Your business numbers are welcome: sales, costs, margins, invoices. Bank and card numbers,
   passwords, contracts you have not chosen to share and anything personal go in the private folder
-  at `/root/rehearsal-co-private`. The brain never opens it. Payroll is your call; it asks.
+  at `%%PRIVATE%%`. The brain never opens it. Payroll is your call; it asks.
 - Before it reads anything from outside (your website, emails, files) it tells you what it will read
   and waits for your yes.
 - Documents you want it to know about: drag them into the chat, or put them in your documents
-  folder at `/root/rehearsal-co-documents`. It checks each file for passwords and account numbers before reading
+  folder at `%%DOCUMENTS%%`. It checks each file for passwords and account numbers before reading
   (text, Word, spreadsheets and PDFs), and asks before reading any file it cannot check, such as a
   photo or scan of paper. That check misses things (some ID numbers, staff personal details), so
   give every file a quick look before you add it.

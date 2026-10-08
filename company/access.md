@@ -9,7 +9,7 @@ chosen to share, health or family matters, anything about a person that they wou
 business to keep.
 
 Payroll and what people are paid, your own pay included: your call. The brain asks once and writes
-your answer here. Those live in the private folder at `/root/rehearsal-co-private`, outside this repository. The
+your answer here. Those live in the private folder at `%%PRIVATE%%`, outside this repository. The
 brain never opens that folder, never indexes it and never asks for its contents.
 
 Added by the owner during `/start`:

@@ -1,10 +1,10 @@
-# Rehearsal Co operating instructions
+# %%COMPANY%% operating instructions
 
-This is the company brain for Rehearsal Co, installed as BigWork AI-OS. It holds what the company
+This is the company brain for %%COMPANY%%, installed as BigWork AI-OS. It holds what the company
 knows and how it works, in plain files the owner controls. Read this file before any work here.
 
 <!-- aios:engine-begin -->
-## Engine rules (BigWork AI-OS 0.3.9; replaced on upgrade, do not edit inside this block)
+## Engine rules (BigWork AI-OS %%ENGINE_VERSION%%; replaced on upgrade, do not edit inside this block)
 
 **Truth has a source.** Every business fact written here carries a source, a date and a status:
 `confirmed` (the owner said so), `imported` (pulled from a website, file, email or export and not
@@ -72,7 +72,7 @@ matters, the risk, the next step. No jargon, no internal codes, no file paths in
 owner has to open the file.
 <!-- aios:engine-end -->
 
-## House rules for Rehearsal Co
+## House rules for %%COMPANY%%
 
 Filled in by the owner during `/start`. Add anything the brain must always remember about how this
 company works: tone, things never to say, people to always copy, hours, seasons.

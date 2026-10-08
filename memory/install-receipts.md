@@ -1,2 +1,0 @@
-- 2026-10-07 installed BigWork AI-OS 0.3.8 on this machine (harness: claude-code, private folder: /root/rehearsal-co-private)
-- 2026-10-07 upgraded engine 0.3.8 -> 0.3.9
