@@ -2,14 +2,6 @@
 
 Plain English, newest on top. `/upgrade --check` shows the owner the entry for the version on offer.
 
-## 0.3.9
-- Your live review. Say "give me my live review" (or type `/live`) and the brain builds a page of
-  everything going on: every open follow-up, every client's next step, and anything waiting for
-  your OK, biggest priority first. Tick what's done, add a note to any line, ask Claude about any
-  item, then send it all back. The brain files each change in the right place: the follow-up
-  list, the client's folder and its history. Your notes never let it send or spend anything.
-- The Friday review ends by offering the same page.
-
 ## 0.3.8
 - Connect Xero, Stripe or your bookkeeping software and the brain will look up invoices, reports and totals for
   you. It still never changes a record there, never moves money, and never saves a card or bank

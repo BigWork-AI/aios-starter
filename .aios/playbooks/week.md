@@ -20,4 +20,3 @@
 6. Write `memory/reviews/YYYY-MM-DD.md`: what moved, what is stuck, the habit picked, the three things for next week, each with a date and an owner. Decisions taken during the review go to `memory/decisions.md`.
 7. Close finished follow-ups (DONE with date) and add new ones.
 8. Report in the house style: one line, three bullets, the one risk, next week's first action. Then save (`sh .aios/hooks/autosave.sh`).
-9. Offer the live review (`.aios/playbooks/live.md`): the same week as a page the owner can tick, note and send back. Build it if they say yes.
