@@ -19,7 +19,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 
 REQUIRED = [
-    'AGENTS.md', 'CLAUDE.md', 'README.md', 'aios.yml', '.aios/VERSION', '.aios/interview.json',
+    'AGENTS.md', 'CLAUDE.md', '.agents/skills/start/SKILL.md', 'README.md', 'aios.yml', '.aios/VERSION', '.aios/interview.json',
     'company/identity.md', 'company/services.md', 'company/customers.md', 'company/people.md',
     'company/access.md', 'company/tools.md', 'clients/README.md', 'skills/README.md',
     'memory/README.md', 'inbox/README.md', 'inbox/review/README.md',

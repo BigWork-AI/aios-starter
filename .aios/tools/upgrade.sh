@@ -257,6 +257,11 @@ PY
 mkdir -p .claude/commands
 for f in "$SRC"/.claude/commands/*.md; do cp "$f" .claude/commands/; done
 cp "$SRC/.claude/settings.json" .claude/settings.json
+# Codex reads its commands from .agents/skills; the owner's own skills are left alone.
+if [ -d "$SRC/.agents/skills" ]; then
+  mkdir -p .agents/skills
+  for d in "$SRC"/.agents/skills/*/; do n=$(basename "$d"); mkdir -p ".agents/skills/$n"; cp "$d"SKILL.md ".agents/skills/$n/SKILL.md"; done
+fi
 
 # c. The fenced engine block inside AGENTS.md, and nothing outside it.
 python3 - "$SRC/AGENTS.md" "$COMPANY" "$NEW" "$PRIVATE" <<'PY'

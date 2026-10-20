@@ -48,6 +48,15 @@ The connections decide what is possible; the permissions page decides what is al
 went in plain words. Saving is automatic when a session ends (the hooks in `.claude/settings.json`
 run the checks, save, fold any side branch into main and push). `/save` does the same on demand.
 
+**Using Codex (or any app without session hooks).** Codex reads this file on its own, but it does not run
+`.claude/settings.json`, so nothing saves or syncs by itself. When the owner is in Codex: at the start of
+a session run `sh .aios/hooks/session-start.sh` (pulls the latest saves, keeps the engine current); after
+every piece of work, and always before the owner closes the window, run `sh .aios/hooks/autosave.sh` and
+tell the owner the last line it prints. Never end a Codex session with unsaved changes. Commands are
+skills in `.agents/skills/`; if one is not recognised, run the playbook of the same name in
+`.aios/playbooks/`. The company's own skills (voice first) are plain files: read `skills/README.md`, then
+open the matching `.claude/skills/<name>/SKILL.md`.
+
 **Questions need no command.** The owner asks in plain words, in any window. Answer only from the
 files, say where the answer came from, flag anything unconfirmed, and say "I do not have that yet"
 rather than guess.
@@ -107,5 +116,5 @@ means `/save`. "You can always do that" or "stop doing that" means update `compa
 `/start` interview and setup · `/meeting` file a meeting that was not recorded (recorded meetings
 file themselves through the sweep in `.aios/playbooks/meeting-sweep.md`) · `/learned` capture what a
 session taught · `/client` add or update a client · `/week` weekly review · `/teach` teach the brain
-a task · `/upgrade` bring the engine up to date now (it also keeps itself current on its own). `/save` saves on demand; saving is otherwise automatic. Each one follows the playbook of the
+a task · `/upgrade` bring the engine up to date now (it also keeps itself current on its own). `/save` saves on demand; in Claude saving is otherwise automatic, in Codex you run it (see above). Each one follows the playbook of the
 same name in `.aios/playbooks/`.

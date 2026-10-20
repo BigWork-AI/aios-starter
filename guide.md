@@ -9,9 +9,20 @@ files to answer questions, draft messages, file meetings and run the small jobs 
 in your own account. BigWork installs it, tunes it, and can be removed at any time. The knowledge
 stays yours.
 
+## Claude or Codex: same brain, two ways in
+
+| | If you use Claude | If you use Codex |
+|---|---|---|
+| Open | the brain folder in Claude | the brain folder in Codex |
+| Commands | `/start`, `/week`, `/save` | `$start`, `$week`, `$save`, or just say it |
+| Saving | automatic when you close the session | say "save" before you close the window |
+| Install | the installer sets up Claude if you lack it | the installer skips Claude and starts Codex |
+
+The files, rules and playbooks are identical either way.
+
 ## Talk to it, do not type
 
-Everything you tell the brain can be spoken. Click the microphone in Claude's message box, on the
+Everything you tell the brain can be spoken. Click the microphone in your AI app's message box (Claude or Codex), on the
 laptop or the phone, and say what you mean. Brain-dump style is fine: it sorts the words into the
 right files.
 
@@ -45,7 +56,7 @@ That only happens if chats end with `/learned`.
   give every file a quick look before you add it.
 - If something that looks like a password or card number gets pasted in, it stops and refuses to
   save it. That is a backstop, not a promise; do not rely on it.
-- Your words go to the AI provider you use (Claude, from Anthropic) the same way a chat would. Ask
+- Your words go to the AI provider you use (Claude from Anthropic, or Codex from OpenAI) the same way a chat would. Ask
   BigWork for the one-page note on what that provider keeps.
 - If something private gets in by mistake, tell BigWork the same day. There is a procedure to remove
   it from the history, not just the file.

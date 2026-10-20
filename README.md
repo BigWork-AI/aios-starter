@@ -23,7 +23,7 @@ files you own, with an AI that reads them and does the work.
 
 ## What to try first
 
-1. Open Claude, choose this brain, and ask it anything about your business in plain words.
+1. Open Claude or Codex, choose this brain, and ask it anything about your business in plain words.
 2. Have a recorded meeting. It files itself. For an unrecorded one, type `/meeting` and tell it what happened.
 3. Type `/week` on Friday.
 

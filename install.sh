@@ -3,7 +3,7 @@
 #
 # The one line a customer pastes, from their welcome kit (it names the release and BigWork's key):
 #
-#   curl -fsSL https://raw.githubusercontent.com/BigWork-AI/aios-starter/v0.3.10/install.sh | sh -s -- "Acme Roofing" --key SHA256:...
+#   curl -fsSL https://raw.githubusercontent.com/BigWork-AI/aios-starter/v0.3.11/install.sh | sh -s -- "Acme Roofing" --key SHA256:...
 #
 # It asks for the business name if none is given, and makes the short name from it. The short
 # name can be given too: ... | sh -s -- "Acme Roofing" acme-roofing --key SHA256:...
@@ -131,9 +131,15 @@ if [ -n "$KEY_FP" ] && ! need openssl; then
   echo "openssl is missing, so BigWork's signature cannot be checked. It ships with macOS; on Linux install it, then paste the same line again."
   exit 1
 fi
+# Which AI app the owner uses: AIOS_HARNESS=codex|claude overrides; otherwise Codex only when it is
+# installed and Claude is not. A Codex-only owner is never sent to install Claude.
+if [ -n "${AIOS_HARNESS:-}" ]; then HARNESS=$AIOS_HARNESS
+elif need claude; then HARNESS=claude
+elif need codex || [ -n "${CODEX_HOME:-}${CODEX_SANDBOX:-}" ]; then HARNESS=codex
+else HARNESS=claude; fi
 # Claude Code: install it if we can, otherwise say exactly where to get it.
 # AIOS_INSTALL_CLAUDE=0 skips this (the kit's tests use it so they never download anything).
-if ! need claude && [ "${AIOS_INSTALL_CLAUDE:-1}" = 1 ]; then
+if [ "$HARNESS" = claude ] && ! need claude && [ "${AIOS_INSTALL_CLAUDE:-1}" = 1 ]; then
   if need npm; then
     echo "Installing Claude Code (one minute)."
     npm install -g @anthropic-ai/claude-code >/dev/null 2>&1 && echo "Claude Code installed." || echo "Could not install Claude Code automatically. Get it at https://claude.ai/code and paste the same line again when it is in."
@@ -284,7 +290,7 @@ if grep -q '%%COMPANY%%' aios.yml 2>/dev/null || [ ! -f aios.yml ]; then
 company: "$COMPANY_YAML"
 slug: $SLUG
 engine: $ENGINE
-harness: claude-code
+harness: $([ "$HARNESS" = codex ] && echo codex || echo claude-code)
 installed: $TODAY
 private_folder: $PRIVATE
 documents_folder: $DOCUMENTS
@@ -367,15 +373,26 @@ fi
 say "Install receipt"
 mkdir -p memory
 printf -- '- %s installed BigWork AI-OS %s on this machine (harness: %s, private folder: %s, engine verified: %s)\n' \
-  "$TODAY" "$ENGINE" "$(need claude && echo claude-code || echo none-yet)" "$PRIVATE" "$([ -n "$KEY_FP" ] && echo "yes, key $KEY_FP" || echo "no, BigWork test install")" >> memory/install-receipts.md
+  "$TODAY" "$ENGINE" "$(if [ "$HARNESS" = codex ]; then echo codex; elif need claude; then echo claude-code; else echo none-yet; fi)" "$PRIVATE" "$([ -n "$KEY_FP" ] && echo "yes, key $KEY_FP" || echo "no, BigWork test install")" >> memory/install-receipts.md
 git add memory/install-receipts.md && git commit -q -m "Install receipt $TODAY" 2>/dev/null || true
 
 say "Done."
 echo "Your brain: $DEST"
 echo "Private folder (never read by the brain): $PRIVATE"
 echo "Documents folder (put the files you want the brain to know here): $DOCUMENTS"
-echo "Talk, do not type: click the microphone in Claude's message box and speak your answers."
-if { [ -n "${CLAUDECODE:-}" ] || [ "${AIOS_NO_LAUNCH:-0}" = 1 ]; } && [ -n "${HERE_DIR:-}" ] && [ "$DEST" = "$HERE_DIR" ]; then
+echo "Talk, do not type: click the microphone in your AI app's message box and speak your answers."
+if [ "$HARNESS" = codex ]; then
+  # Codex has no session hooks: say so, and start the interview in Codex when it is installed.
+  echo "Using Codex: it does not save by itself. Before you close it, say \"save\"."
+  if [ -n "${CODEX_HOME:-}${CODEX_SANDBOX:-}" ] || [ "${AIOS_NO_LAUNCH:-0}" = 1 ]; then
+    echo "NEXT STEP: in Codex, open the folder $DEST and say hello (or type \$start). The interview begins there. For Codex: read AGENTS.md in that folder, then run .aios/playbooks/start.md, starting with the greeting."
+  elif need codex; then
+    echo "Opening the interview."
+    cd "$DEST" && exec codex "Read AGENTS.md, then run .aios/playbooks/start.md now, starting with the greeting."
+  else
+    echo "Install Codex, open $DEST, and say hello (or type \$start)."
+  fi
+elif { [ -n "${CLAUDECODE:-}" ] || [ "${AIOS_NO_LAUNCH:-0}" = 1 ]; } && [ -n "${HERE_DIR:-}" ] && [ "$DEST" = "$HERE_DIR" ]; then
   # Claude ran this inside the folder that is now the brain: carry straight on in the same session.
   echo "YOUR BRAIN IS READY, in this folder: $DEST"
   echo "NEXT, FOR CLAUDE: read AGENTS.md in this folder, then run .aios/playbooks/start.md now, starting with the greeting. The owner does not need to open anything."

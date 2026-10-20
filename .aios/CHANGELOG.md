@@ -2,6 +2,10 @@
 
 Plain English, newest on top. `/upgrade --check` shows the owner the entry for the version on offer.
 
+## 0.3.11
+- Works in Codex, not only Claude. The installer picks Codex when that is what you have and never asks you to install Claude. Commands are available as `$start`, `$week` and so on. Codex cannot save by itself when a window closes, so the brain saves when you say "save" and is told to do it before every session ends.
+- The guide now shows Claude and Codex side by side: how to open the brain, what to type, how saving works.
+
 ## 0.3.10
 - Updates are now checked before they install. Only a release signed by BigWork's key, matching
   BigWork's published release list, and newer than the one you have, can go in. The first time, the
