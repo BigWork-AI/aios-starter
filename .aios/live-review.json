@@ -1,0 +1,109 @@
+{
+  "title": "Live review",
+  "owner": "you",
+  "business": "your company",
+  "brain_root": "..",
+  "look": "../company/look.json",
+  "theme": {
+    "bg": "#F7F7F5",
+    "paper": "#FFFFFF",
+    "ink": "#1F2328",
+    "accent1": "#2B59C3",
+    "accent2": "#B8571B",
+    "good": "#2E7D4F",
+    "highlight": "#E8B923",
+    "muted": "#5C6670",
+    "line": "#DCDCD6",
+    "display_font": "-apple-system,'Segoe UI',Helvetica,Arial,sans-serif",
+    "body_font": "-apple-system,'Segoe UI',Helvetica,Arial,sans-serif",
+    "mono_font": "ui-monospace,SFMono-Regular,Menlo,Consolas,monospace",
+    "fonts_url": ""
+  },
+  "agenda": "../memory/reviews/live-agenda.md",
+  "apply_rules": "live-apply.md",
+  "output_prefix": "../memory/reviews/live",
+  "blind_spots": [
+    "Texts, DMs and phone calls",
+    "Email, calendar or anything else the brain was not asked to check for this review",
+    "Handshakes and anything only in your head"
+  ],
+  "sources": [
+    {
+      "id": "followups",
+      "label": "Follow-ups",
+      "path": "../memory/follow-ups.md",
+      "where": "follow-up list (memory/follow-ups.md)",
+      "code_prefix": "FU-",
+      "columns": {
+        "title": "What",
+        "detail": "Source",
+        "due": "Due",
+        "source": "Owner",
+        "code": "@slug"
+      },
+      "open_when": {
+        "column": "Status",
+        "startswith": "OPEN"
+      },
+      "calls": [
+        "Act this week",
+        "New date",
+        "Drop it"
+      ]
+    },
+    {
+      "id": "clients",
+      "label": "Clients and prospects",
+      "kind": "vaults",
+      "path": "../clients/*/meta.yml",
+      "where": "client folder (clients/)",
+      "code_prefix": "CL-",
+      "columns": {
+        "code": "_slug",
+        "title": "company",
+        "detail": "next_action",
+        "due": "next_action_due",
+        "source": "status_source"
+      },
+      "open_when": {
+        "column": "stage",
+        "not_in": [
+          "past"
+        ]
+      },
+      "group": false,
+      "done_expect": "touches:last_touch",
+      "expect": {
+        "Next step done": "touches:last_touch"
+      },
+      "calls": [
+        "Next step done",
+        "New date",
+        "Park it"
+      ]
+    },
+    {
+      "id": "review",
+      "label": "Waiting for your OK",
+      "kind": "folder",
+      "path": "../inbox/review/*",
+      "where": "review inbox (inbox/review/)",
+      "code_prefix": "RV-",
+      "columns": {
+        "code": "_slug",
+        "title": "_name",
+        "detail": "_text",
+        "added": "_added"
+      },
+      "expect": {
+        "Approve": "verifies"
+      },
+      "calls": [
+        "Approve",
+        "Needs changes",
+        "Drop it"
+      ]
+    }
+  ],
+  "save_mode": "main"
+}

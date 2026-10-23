@@ -1,0 +1,13 @@
+{
+  "_help": [
+    "Your live review page wears this. Edit it or say 'make the live review look like my website'.",
+    "logo: a file inside this brain (SVG, PNG, JPG or WebP), for example company/logo.svg. Leave empty for your business name as text.",
+    "colours: bg (page), paper (cards), ink (text), accent1, accent2, good (done), highlight, muted, line; values like #1E2228.",
+    "fonts: display and body font names; url is a Google Fonts css2 address, or \"system\" for no download."
+  ],
+  "logo": "",
+  "colours": {},
+  "fonts": {
+    "url": "system"
+  }
+}

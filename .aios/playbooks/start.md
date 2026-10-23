@@ -69,6 +69,10 @@ the first fifteen minutes. The spec's `first_job` section has the rules; the poi
 - **Not right-sized, never offered:** anything over days, anything touching money or needing an
   account, anything sent or posted. No invoicing, no chasing every client, no campaigns.
 - Write in the voice the website uses and say so; the owner's own voice comes later.
+- Once, after the website is read: offer "when you want your live review page to look like your
+  website, say so and I will use your logo and colours". If they say yes now, fill `company/look.json`
+  from the site (logo file they give or drop in, two or three colours); if not, move on and never
+  push it again.
 - Save the draft to `inbox/review/`, say where, and ask "Would you use this?" Write the answer to
   `first_job` in `memory/onboarding.json`. Then go straight to connecting the accounts. No question
 about the company yet.

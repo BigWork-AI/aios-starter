@@ -2,6 +2,29 @@
 
 Plain English, newest on top. `/upgrade --check` shows the owner the entry for the version on offer.
 
+## 0.3.12
+- Your live review. Say "give me my live review" (or type `/live`) and the brain builds a page of
+  everything going on: every open follow-up, every client's next step, and anything waiting for
+  your OK, biggest priority first. Tick what's done, add a note to any line, ask Claude about any
+  item, then send it all back. The brain files each change in the right place: the follow-up
+  list, the client's folder and its history. Your notes never let it send or spend anything.
+- The page wears your look, not ours. Your logo, your colours, your fonts, from one small file in
+  your company folder (`company/look.json`); say "make it look like my website" and the brain fills
+  it in. With nothing set it is plain and quiet. No BigWork branding anywhere on it.
+- Send saves straight into your brain, the same way everything else does. No approval screens.
+- Every send comes back with a receipt. The brain checks each of your decisions against your
+  files: a ticked follow-up really closed, a new date is the date you asked for, a client's last
+  touch really moved, a dropped item really left. A note the files cannot prove shows with your
+  own words and a "Looks right" button, so you are the one who confirms it. A send that never
+  gets a receipt shows as a problem, never as done.
+- Where your ticks and notes live: the page is hosted by Anthropic, and what you type on it is
+  stored there and kept as history after Send copies your decisions into the brain. The access
+  page now says so. Put nothing on the page you would not put in the brain.
+- The Friday review ends by offering the same page.
+- In Codex, or in a Claude session that cannot publish pages, the page opens as a file instead and
+  ticks and notes do not save; the brain says so when that happens.
+- After an update, the brain points you to a "what's new" page for the version it just installed.
+
 ## 0.3.11
 - Works in Codex, not only Claude. The installer picks Codex when that is what you have and never asks you to install Claude. Commands are available as `$start`, `$week` and so on. Codex cannot save by itself when a window closes, so the brain saves when you say "save" and is told to do it before every session ends.
 - The guide now shows Claude and Codex side by side: how to open the brain, what to type, how saving works.

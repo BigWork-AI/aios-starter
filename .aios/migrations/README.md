@@ -1,7 +1,7 @@
 # Migrations
 
 One script per engine version that changes where the owner's files live or what the brain keeps:
-`0.3.0.sh`, `0.3.5.sh`, `0.3.10.sh`. The updater runs every script whose version is newer than
+`0.3.0.sh`, `0.3.5.sh`, `0.3.10.sh`, `0.3.12.sh`. The updater runs every script whose version is newer than
 the installed one and no newer than the engine being installed, oldest first, after the engine
 folder is replaced and before the checks. Scripts come only from the verified engine.
 

@@ -12,6 +12,13 @@ Payroll and what people are paid, your own pay included: your call. The brain as
 your answer here. Those live in the private folder at `%%PRIVATE%%`, outside this repository. The
 brain never opens that folder, never indexes it and never asks for its contents.
 
+<!-- aios:live-review-storage -->
+The live review page is a web page hosted by Anthropic (a Claude page). The ticks and notes you
+type on it are stored by that service, and the page keeps them as history after Send copies your
+decisions into this brain. Nothing private belongs on the page: treat it like a whiteboard in the
+office, not like this brain.
+<!-- /aios:live-review-storage -->
+
 Added by the owner during `/start`:
 
 - (none yet)

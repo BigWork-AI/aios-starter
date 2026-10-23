@@ -310,3 +310,5 @@ APPLYING=0
 git remote get-url origin >/dev/null 2>&1 && { aios_push -q origin main 2>/dev/null || true; }
 if [ "$ACTION" = auto ]; then echo "Engine updated to $NEW. What changed:"; else echo "Engine $NEW installed. What changed:"; fi
 changelog "$NEW" .aios/CHANGELOG.md
+# The "what's new" page for this version, when the engine ships one: say it, and tell the owner one thing to try.
+if [ -s .aios/whats-new.url ]; then echo "  Something new arrived. Read what it does and one thing to try: $(head -1 .aios/whats-new.url)"; fi
