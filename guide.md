@@ -76,7 +76,7 @@ public shelf, not something in your account; you never need to touch it.
 
 ## One line of history
 
-Your brain has one owner and one timeline. Every save lands on the main line and goes to your private GitHub copy. There are no side branches and no pull requests to approve. If you ever see one, the automatic save folds it back in.
+Your brain has one owner and one timeline. Every save lands on the main line and goes to your private GitHub copy. There are no side branches and no pull requests to approve. If you ever see one, the automatic save folds it back in. One exception keeps you safe: if a save from your phone or a cloud session changes how the brain itself works (its rules, its settings, its skills, what it may do without asking), your main computer tells you what it would change and waits for your yes. Everyday notes never wait.
 
 ## Three things that break it
 
@@ -86,9 +86,10 @@ Your brain has one owner and one timeline. Every save lands on the main line and
    confirm it. Answer the questions.
 3. Pasting private things in. See above.
 
-## The six commands
+## The seven commands
 
 Questions need no command; just ask. `/start` interview · `/meeting` file an unrecorded meeting ·
 `/learned` capture what a chat taught · `/client` add or update a client · `/week` weekly review ·
-`/teach` teach it a task. Saving is automatic; `/save` does it on demand. The command card has one
+`/teach` teach it a task · `/live` your live review, one page of everything going on, tick and
+Send. Saving is automatic; `/save` does it on demand. The command card has one
 line on each.

@@ -1,6 +1,6 @@
 # Command card
 
-Six commands. In Codex, type `$` and the name instead of `/` (for example `$start`), or just say it in plain words. Questions need no command: ask the brain anything in plain words, in any window.
+Seven commands. In Codex, type `$` and the name instead of `/` (for example `$start`), or just say it in plain words. Questions need no command: ask the brain anything in plain words, in any window.
 
 **Talk, do not type.** Click the microphone in your AI app's message box (Claude or Codex), on the laptop or the phone, and speak.
 
@@ -12,5 +12,6 @@ Six commands. In Codex, type `$` and the name instead of `/` (for example `$star
 | `/client` | Add a new client or prospect, or update where one stands. |
 | `/week` | Friday review: what moved, what is overdue, what to do next week. |
 | `/teach` | Show it a job you wish you did not have to do, in your words. From then on you just ask for it. |
+| `/live` | Your live review: one page of everything going on. Tick, note, Send; it files each change and sends back a receipt. |
 
 The engine keeps itself current each time the brain opens; `/upgrade` does it on demand. Saving is automatic when a Claude session ends. In Codex, say "save" before you close the window. `/save` does it on demand if you want to be sure.

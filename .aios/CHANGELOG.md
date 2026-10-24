@@ -2,6 +2,22 @@
 
 Plain English, newest on top. `/upgrade --check` shows the owner the entry for the version on offer.
 
+## 0.3.13
+- Every file is checked before it is saved, whatever its name. The checker used to miss a file
+  with a space or an accent in its name ("Client Notes.md", "Café.md"), and a file you moved and
+  changed in the same save. A password or key in one of those could be saved and backed up with no
+  warning. Now those files are read like any other, and a save with a secret in one stops and
+  names the file.
+- Saves from your phone or a cloud session can no longer change how your brain works behind your
+  back. Notes, clients and company facts still come in on their own. A save that changes the
+  brain's rules, its settings, its skills, what it may do without asking, or what stays private
+  now waits: your main computer tells you what it would change and brings it in only when you say
+  yes.
+- The command card and guide now list `/live`, the live review, so they show seven commands.
+- Send on the live review works however much you write. It used to fail with "Could not send to
+  Claude (invalid)" once a session's ticks and notes passed the size of one comment; nothing was
+  lost, but the button stopped. Now a big batch is saved on the page and Claude reads it from there.
+
 ## 0.3.12
 - Your live review. Say "give me my live review" (or type `/live`) and the brain builds a page of
   everything going on: every open follow-up, every client's next step, and anything waiting for

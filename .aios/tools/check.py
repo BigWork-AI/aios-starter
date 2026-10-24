@@ -76,12 +76,14 @@ def scan_text(text: str, name: str) -> list:
 
 
 def tracked_files(staged: bool) -> list:
-    args = ['git', '-C', str(ROOT), 'diff', '--cached', '--name-only', '--diff-filter=ACM'] if staged \
-        else ['git', '-C', str(ROOT), 'ls-files']
-    out = subprocess.run(args, capture_output=True, text=True)
+    # -z gives every name whole: spaces and accents ("Client Notes.md", "Café.md") are neither split
+    # nor quoted. --no-renames lists a moved-and-edited file as added, so its new content is read.
+    args = ['git', '-C', str(ROOT), 'diff', '--cached', '--name-only', '-z', '--no-renames', '--diff-filter=ACM'] if staged \
+        else ['git', '-C', str(ROOT), 'ls-files', '-z']
+    out = subprocess.run(args, capture_output=True, text=True, encoding='utf-8', errors='surrogateescape')
     if out.returncode != 0:
         return [str(p.relative_to(ROOT)) for p in ROOT.rglob('*') if p.is_file() and '.git' not in p.parts]
-    return out.stdout.split()
+    return [name for name in out.stdout.split('\0') if name]
 
 
 def read(name: str, staged: bool) -> str:

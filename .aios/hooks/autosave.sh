@@ -12,7 +12,9 @@ if [ -z "$(git status --porcelain)" ] && [ "$branch" = main ]; then
   git remote get-url origin >/dev/null 2>&1 && { aios_push -q origin main 2>/dev/null || true; }
   exit 0
 fi
-python3 .aios/tools/frontpage.py >/dev/null 2>&1 || true
+# The front page (README.md) is rebuilt on main only. On a phone or cloud side branch it would count as
+# a change to how the brain works and hold every save; the main computer rebuilds it at its next save.
+[ "$branch" = main ] && { python3 .aios/tools/frontpage.py >/dev/null 2>&1 || true; }
 git add -A
 if ! python3 .aios/tools/check.py --staged; then
   echo "Not saved: the checks above found something that must not go in the brain. Fix it, then /save."
@@ -23,7 +25,20 @@ git -c user.name="${GIT_AUTHOR_NAME:-$(git config user.name || echo owner)}" \
     -c user.email="${GIT_AUTHOR_EMAIL:-$(git config user.email || echo owner@brain.local)}" \
     commit -q -m "Session save $(date +%Y-%m-%d\ %H:%M)" 2>/dev/null || true
 if [ "$branch" != main ]; then
-  # a cloud or phone session started on a side branch: fold it into main, one line of history
+  # A save that changes how the brain itself works (.aios/tools/wiring.py) stays on its side branch
+  # and waits for the owner's yes on the main computer (session start names it there).
+  base=main
+  git rev-parse -q --verify refs/remotes/origin/main >/dev/null && base=origin/main
+  if ! changes=$(python3 .aios/tools/wiring.py "$base" "$branch" 2>&1); then
+    if git remote get-url origin >/dev/null 2>&1 && ! aios_kit_home && aios_push -q origin "$branch" 2>/dev/null; then
+      echo "Saved on this device. It changes how the brain itself works, so it waits for your yes on your main computer before it joins the rest:"
+    else
+      echo "Saved on this device only. It changes how the brain itself works, so it waits for your yes on your main computer:"
+    fi
+    printf '%s\n' "$changes"
+    exit 0
+  fi
+  # everyday content from a cloud or phone session: fold it into main, one line of history
   git checkout -q main 2>/dev/null || git checkout -q -b main
   git remote get-url origin >/dev/null 2>&1 && ! aios_kit_home && git pull -q --ff-only origin main 2>/dev/null
   git merge -q --no-edit "$branch" 2>/dev/null || { echo "Could not fold branch '$branch' into main automatically. Run /save and read the message."; exit 0; }

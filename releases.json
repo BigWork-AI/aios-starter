@@ -1,7 +1,7 @@
 {
-  "latest": "0.3.12",
-  "tag": "v0.3.12",
-  "sha256": "1d698f7bb2c13cb2e3621c6c2f95ecf98c7d4ec7d7722e3c1f46d854e1c6cfa7",
-  "published": "2026-10-23",
-  "brain_commit": "e20e204"
+  "latest": "0.3.13",
+  "tag": "v0.3.13",
+  "sha256": "fdfba9b841405c5832551ad2ef1f65bdad1a6c3588919e820d1559b413df6799",
+  "published": "2026-10-24",
+  "brain_commit": "22fef56"
 }
