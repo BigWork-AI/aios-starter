@@ -2,6 +2,14 @@
 
 Plain English, newest on top. `/upgrade --check` shows the owner the entry for the version on offer.
 
+## 0.3.14
+- Older brains can update again. A brain on 0.3.10 could stop with a missing start
+  command and return to its previous version. This update brings the required
+  commands along through the older updater. Your taught skills, company files and
+  notes stay in place. When updating from 0.3.10, a required command name already
+  used by one of your own skills stops the update and restores the previous
+  version for BigWork to help resolve it.
+
 ## 0.3.13
 - Every file is checked before it is saved, whatever its name. The checker used to miss a file
   with a space or an accent in its name ("Client Notes.md", "Café.md"), and a file you moved and

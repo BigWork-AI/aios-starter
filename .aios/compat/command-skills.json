@@ -1,0 +1,11 @@
+{
+  "client": "---\nname: client\ndescription: Add a client or prospect, or update where one stands. Use for add a client or $client.\n---\n\nFollow .aios/playbooks/client.md. Read AGENTS.md first; it does not expand task permissions.\n",
+  "learned": "---\nname: learned\ndescription: Write down what this chat taught into the right files before closing. Use for remember what we learned or $learned.\n---\n\nFollow .aios/playbooks/learned.md. Read AGENTS.md first; it does not expand task permissions.\n",
+  "live": "---\nname: live\ndescription: Build the live review page of follow-ups, client next steps and items waiting for approval. Use for give me my live review or $live.\n---\n\nFollow .aios/playbooks/live.md. Read AGENTS.md first; it does not expand task permissions.\n",
+  "meeting": "---\nname: meeting\ndescription: File a meeting that was not recorded. Use when the owner says file that meeting or $meeting.\n---\n\nFollow .aios/playbooks/meeting.md. Read AGENTS.md first; it does not expand task permissions.\n",
+  "save": "---\nname: save\ndescription: Save the brain now: run the checks, commit and push to main. Use for save or $save. Always run before ending a Codex session.\n---\n\nFollow .aios/playbooks/save.md. Read AGENTS.md first; it does not expand task permissions.\n",
+  "start": "---\nname: start\ndescription: Run the kickoff interview for this company brain. Use when the owner says start, set up my company brain, hello on a new brain, or $start.\n---\n\nFollow .aios/playbooks/start.md. Read AGENTS.md first; it does not expand task permissions.\n",
+  "teach": "---\nname: teach\ndescription: Teach the brain a task the owner wishes they did not have to do. Use for I hate doing X, teach you something, or $teach.\n---\n\nFollow .aios/playbooks/teach.md. Read AGENTS.md first; it does not expand task permissions.\n",
+  "upgrade": "---\nname: upgrade\ndescription: Bring the BigWork AI-OS engine up to date now. Use for upgrade or $upgrade.\n---\n\nFollow .aios/playbooks/upgrade.md. Read AGENTS.md first; it does not expand task permissions.\n",
+  "week": "---\nname: week\ndescription: Run the Friday weekly review. Use for do the weekly review or $week.\n---\n\nFollow .aios/playbooks/week.md. Read AGENTS.md first; it does not expand task permissions.\n"
+}
