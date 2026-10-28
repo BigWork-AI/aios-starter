@@ -2,6 +2,16 @@
 
 Plain English, newest on top. `/upgrade --check` shows the owner the entry for the version on offer.
 
+## 0.3.15
+- Your pipeline page can no longer go stale. `clients/pipeline.md` is now built from your client
+  cards every time the brain saves, so it always says what the cards say: who is a client, who is in
+  play, who you are waiting on, who is a partner and who is in the past. Each row shows the day its
+  card was last updated. A row is flagged when its card has not been touched in two weeks, when a
+  next action or follow-up is overdue, or when the card has no date, so an old entry can never pass
+  for a current one. The page cannot be edited by hand: a save that changes it without changing the
+  card is refused and says which card to change. To move someone, change their card (`stage`,
+  `waiting_on`, `next_action`, `status_updated`) and save.
+
 ## 0.3.14
 - Older brains can update again. A brain on 0.3.10 could stop with a missing start
   command and return to its previous version. This update brings the required

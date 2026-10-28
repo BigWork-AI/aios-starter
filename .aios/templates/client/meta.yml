@@ -10,4 +10,5 @@ status_confidence: confirmed   # confirmed | imported | inferred
 last_touch: YYYY-MM-DD
 next_action: "<the single next step>"
 next_action_due: YYYY-MM-DD
+waiting_on: ""           # who owes the next move, when it is theirs; clear it when the ball comes back
 note: "<one line>"

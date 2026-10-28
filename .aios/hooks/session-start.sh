@@ -82,4 +82,5 @@ keep_engine_current() {
 
 sync_from_other_devices
 keep_engine_current
+[ -f .aios/tools/pipeline.py ] && python3 .aios/tools/pipeline.py --age 2>&1 || true
 exit 0

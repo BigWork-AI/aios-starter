@@ -12,8 +12,11 @@ if [ -z "$(git status --porcelain)" ] && [ "$branch" = main ]; then
   git remote get-url origin >/dev/null 2>&1 && { aios_push -q origin main 2>/dev/null || true; }
   exit 0
 fi
+# The pipeline page (clients/pipeline.md) is client content, so it is rebuilt before every save on every
+# branch; the check below would otherwise refuse a phone or cloud save that changed a card.
 # The front page (README.md) is rebuilt on main only. On a phone or cloud side branch it would count as
 # a change to how the brain works and hold every save; the main computer rebuilds it at its next save.
+python3 .aios/tools/pipeline.py >/dev/null 2>&1 || true
 [ "$branch" = main ] && { python3 .aios/tools/frontpage.py >/dev/null 2>&1 || true; }
 git add -A
 if ! python3 .aios/tools/check.py --staged; then

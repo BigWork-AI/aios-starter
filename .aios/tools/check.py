@@ -17,6 +17,8 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
+sys.dont_write_bytecode = True  # importing a sibling tool must not leave a cache file in the engine folder for the save to pick up
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 REQUIRED = [
     'AGENTS.md', 'CLAUDE.md', '.agents/skills/start/SKILL.md', 'README.md', 'aios.yml', '.aios/VERSION', '.aios/interview.json',
@@ -120,6 +122,15 @@ def check_fact_tables(names: list, staged: bool) -> list:
     return problems
 
 
+def check_pipeline(staged: bool) -> list:
+    """clients/pipeline.md is generated from the client cards; a page that does not match them is stale and must not be saved."""
+    try:
+        import pipeline
+    except ImportError:
+        return ['.aios/tools/pipeline.py is missing: the brain is incomplete; run the install again.']
+    return pipeline.problems(ROOT, staged)
+
+
 def check_onboarding() -> list:
     path = ROOT / 'memory/onboarding.json'
     if not path.exists():
@@ -137,7 +148,7 @@ def main(argv: list) -> int:
     else:
         staged = argv[:1] == ['--staged']
         names = [n for n in tracked_files(staged) if Path(n).suffix.lower() in SCAN_SUFFIXES or Path(n).name == '.env']
-        problems = check_structure() + check_onboarding() + check_fact_tables(names, staged)
+        problems = check_structure() + check_onboarding() + check_fact_tables(names, staged) + check_pipeline(staged)
         for name in names:
             if name.startswith('.aios/tools/'):
                 continue

@@ -92,4 +92,6 @@ Questions need no command; just ask. `/start` interview · `/meeting` file an un
 `/learned` capture what a chat taught · `/client` add or update a client · `/week` weekly review ·
 `/teach` teach it a task · `/live` your live review, one page of everything going on, tick and
 Send. Saving is automatic; `/save` does it on demand. The command card has one
-line on each.
+line on each. Your pipeline page, `clients/pipeline.md`, is rebuilt from the client cards at
+every save, so it can never drift from them; a row is flagged when its card is more than two
+weeks old or something on it is overdue.
